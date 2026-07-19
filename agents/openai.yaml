@@ -1,0 +1,7 @@
+interface:
+  display_name: "Algorithmic Problem Solving"
+  short_description: "Solve and verify exact, scored, and interactive algorithms"
+  default_prompt: "Use $algorithmic-problem-solving to solve this problem, implement the strongest justified approach, and verify it with the available harness."
+
+policy:
+  allow_implicit_invocation: true
