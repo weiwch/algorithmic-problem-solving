@@ -90,29 +90,6 @@ Model constraints at their real granularity. An edge conflict need not forbid a
 whole vertex; one occupied interval need not block a full day; independent
 channels/capacities should remain separate.
 
-### Before choosing an optimizer
-
-Do not begin with simulated annealing, hill climbing, or random search. First
-check:
-
-1. **Natural object:** represent routes, schedules, components, assignments, or
-   geometric structures rather than low-level variables, rotations, or
-   serialized tokens.
-2. **Meaningful moves:** estimate
-   `useful_event_rate = P(move changes target structure)`. If most moves are
-   invalid or destroy useful structure, redesign the state or transition before
-   tuning parameters.
-3. **Constructible target:** when the desired structure can be built directly,
-   prefer `construction -> improvement` over
-   `random state -> hope search discovers structure`.
-
-### Common failure pattern
-
-`low-level state + random variable move + complicated proxy` produces many
-iterations, rare true-score changes, and proxy-only gains. Fix the
-representation and transition; do not add weights, temperature, or iterations
-until the useful-event rate improves.
-
 Prefer:
 
 ```text

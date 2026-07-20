@@ -53,9 +53,7 @@ complete implementation and prompt submission when it is part of the requested
 workflow. Only when the attempt produces a routing signal—during reasoning,
 implementation, validation, or remote evaluation—does the listed reference
 become required: read it completely before the gated action. The signals are
-representative rather than exhaustive. If several independent signals match,
-read the smallest directly relevant set; do not follow cross-reference links
-automatically.
+representative rather than exhaustive. 
 
 | Routing signal | Required reference | Gate before continuing |
 |---|---|---|
