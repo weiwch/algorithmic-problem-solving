@@ -132,6 +132,21 @@ For interactive output:
 Test the real process through pipes against a simulator to expose buffering and
 EOF mistakes.
 
+### Nonzero `Wrong Answer` or non-perfect feedback in query-scored tasks
+
+A judge label does not always identify the failing layer. If official feedback
+gives a nonzero score but says `Wrong Answer` or otherwise reports a
+non-perfect result:
+
+- Treat it first as legal but low score unless evidence proves invalid.
+- If the public scoring formula contains a query-count term, invert it to
+  estimate the hidden query count and compare that estimate with local query
+  categories.
+- If the score has no query-count term, do not invent one; diagnose the actual
+  scored objective instead.
+- Do not spend more than one short cycle on correctness unless local or remote
+  feedback gives zero, a crash, or a protocol error.
+
 ## 7. Data structures and invariants
 
 Advanced structures are high-risk code. For each operation state:

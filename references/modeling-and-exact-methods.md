@@ -88,10 +88,10 @@ objective, switch to a heuristic or scored hybrid. Preserve hard feasibility,
 build a guaranteed-valid baseline, and keep the true raw objective authoritative
 for comparison and final output.
 
-Before designing that route, read
-[heuristic-search.md](heuristic-search.md). Use it to choose a representation,
-construction, neighborhoods, incremental evaluation, search budget, and
-validation loop from measured evidence.
+Start with a guaranteed-valid baseline. Consult
+[heuristic-search.md](heuristic-search.md) only if that baseline is legal but
+score, move quality, reachability, or evaluation cost stalls and measured search
+guidance is needed. Do not load it merely because non-optimal output is allowed.
 
 ## 4. State design and dominance
 

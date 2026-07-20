@@ -1,17 +1,19 @@
 # Independent Checker and Local Evaluation
 
-Use this reference when an official checker/scorer is unavailable, remote
-feedback is unexpectedly low, or solver-side validation may share the same bug
-as the implementation. The local checker is a debugging oracle, not presumed
-ground truth.
+Use this reference when an official checker/scorer is unavailable and zero or
+invalid feedback is unexplained, local and remote evaluation disagree, or
+solver-side validation may share the same bug as the implementation. The local
+checker is a debugging oracle, not presumed ground truth.
 
-## 1. Mandatory independent handoff
+## 1. Independent checker isolation
 
-After an early legal-looking solution receives an unexpectedly low or zero
-score and no official checker is available, delegate a fresh sub-agent to build
-the checker independently.
+After an early legal-looking solution receives zero/invalid feedback or a
+local/remote contradiction and no official checker is available, build the
+checker independently. Use a fresh sub-agent only when the user requests or
+applicable instructions permit delegation; otherwise keep a separate checker
+implementation path and avoid copying solver-derived formulas.
 
-Give the checker agent:
+Give the independent checker path or checker agent:
 
 ```text
 statement and exact I/O format
@@ -26,7 +28,7 @@ thread's favored explanation. This reduces correlated modeling bugs. If later
 debugging requires solver details, expose them only after the checker has
 written its own contract and tests.
 
-The checker agent should return:
+The checker should return:
 
 ```text
 local_check.py or local_check.cpp
@@ -38,9 +40,9 @@ small valid, invalid, and boundary fixtures
 one concise report to the main thread
 ```
 
-Keep full checker implementation and exploratory logs in the sub-agent's
-workspace. Feed the main thread the artifact path, contract summary, failing
-witnesses, and objective results rather than the entire exploration transcript.
+Keep checker implementation and exploratory logs separate from the solver.
+Retain the artifact path, contract summary, failing witnesses, and objective
+results rather than the entire exploration transcript.
 
 ## 2. Minimal checker architecture
 
@@ -66,6 +68,14 @@ exit 2: checker/configuration failure
 
 Do not require JSON, a database, or a generic experiment framework unless the
 task already needs them.
+
+### Local simulator rule
+
+- The first simulator may be simple, but cap it to small `n`.
+- For `n >= 1000`, simulator responses must be near
+  `O(query_size log n)` or the simulator must be written in C++.
+- If a local stress run stalls twice, stop and submit a challenger or switch
+  simulator implementation.
 
 ## 3. Parsing obligations
 
@@ -159,3 +169,9 @@ candidate | valid/invalid | raw objective | runtime | first failure | keep/rever
 If the local checker and remote feedback disagree, do not tune the solver yet.
 Ask the checker agent to isolate the smallest discrepancy, then test competing
 contract interpretations with a minimal witness.
+
+If local validation passes but remote evaluation is zero, do not add more
+random tests under the unchanged validator; such tests cannot reveal a missing
+validator condition. Re-audit or independently rederive the validation
+contract, then change the validator or test a competing interpretation before
+generating more solver cases.

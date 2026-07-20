@@ -5,10 +5,16 @@ conditions, not copy-paste code. Generate only the implementation the problem
 needs, then compile and test it; static template libraries often contain hidden
 convention, overflow, memory, or boundary assumptions.
 
-## Research gate for established problem families
+## Optional research escalation for established problem families
 
-Before inventing a solver for a mature open optimization problem or standard
-benchmark:
+Do not delay the first concrete solver for a literature review. First derive a
+plausible route from the contract and bounds and, when code is requested, get a
+baseline compiling on focused tests.
+
+Research a mature open optimization problem or standard benchmark only when the
+user asks for it, a delicate external fact or constant needs verification, or
+the first baseline and controlled attempts show that the current family has
+stalled. Time-box the research:
 
 1. identify the canonical problem name and important variants;
 2. search classic papers, surveys, recent competitive methods, benchmark rules,
@@ -23,9 +29,10 @@ Prefer primary papers, official benchmark documentation, and original source
 repositories. Public code is evidence and a baseline, not permission to copy 
 hidden outputs, private tuning data, or benchmark-specific answers.
 
-Use a fresh research sub-agent when the literature is broad or the main thread
-is already anchored on one method. Ask for a ranked shortlist and discriminating
-experiments, not a generic survey.
+If the user explicitly requests or permits delegation, a fresh research
+sub-agent can reduce anchoring when the literature is broad. Otherwise research
+directly. Ask for a ranked shortlist and discriminating experiments, not a
+generic survey.
 
 ## Fundamental transforms
 
