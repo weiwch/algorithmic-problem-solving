@@ -30,6 +30,7 @@ Produce the strongest verified program that fits the actual contract. Route betw
 6. After a verified champion reaches a plateau defined in Section 4, preserve it and run the mandatory fresh-context trajectory audit and research escalation before choosing another method family. Sub-agents may diagnose, research, and create isolated challenger artifacts as allowed there; only the main agent may modify the champion, submit, or promote a challenger.
 7. Do not shelve a credible structurally stronger researched method without a minimally faithful prototype and concrete rejection evidence. A separate implementation returned by a sub-agent must be attempted through the compilation, validation, and authorized-submission gate in Section 4.
 8. Never invoke either plateau sub-agent in read-only mode and never add a blanket prohibition on file editing to its prompt. Give each agent a distinct fresh writable path; restrict it from changing existing files, the champion, or submission state instead of forbidding all file writes.
+9. Strongly prefer target-supported C++ (portable C++17 when unspecified) for every new checker, scorer, interactor, simulator, or evaluation harness and for implementations delegated to sub-agents; require compilable `.cpp` files with exact build and run commands. Never accept a Python-only replacement merely for implementation convenience. 
 
 Use artifact terms consistently:
 
@@ -174,10 +175,19 @@ Do not modify the champion and do not submit solutions.
 Return the path of every file you create.
 ```
 
+Also include this implementation-language contract whenever the role may create executable code:
+
+```text
+Deliver compilable C++ source and the exact build and run commands.
+Use the official C++ standard/toolchain; if unspecified, use portable C++17.
+Any checker, scorer, interactor, simulator, or harness must be C++ unless a documented Rule 9 exception applies.
+Use another language only under that exception or when the verified solver contract requires it; state the evidence.
+```
+
 - **Trajectory critic:** independently reconstruct the objective, bottleneck, and likely failure layer before reading the attempt history. Then audit the representation, assumptions, reachability, evaluator fidelity, and experiment design. Return ranked root causes, the strongest competing explanation, `3-5` structurally different remedies, and the smallest falsifying experiment, success threshold, and abort condition for each leading remedy.
 - **Method researcher:** perform a full-effort search by canonical problem names and variants and by distinctive mathematical structure, objective, constraints, and scale. Search similar contest tasks, official editorials and solution write-ups, primary papers and surveys, benchmark documentation, competitive methods, and maintained public implementations; follow useful aliases and citation chains. Continue until additional well-targeted queries stop producing new credible method families or the available research budget is exhausted. Map every candidate back to the exact contract. Return a ranked shortlist with direct sources, applicability gaps, expected upside, implementation risk, and one discriminating experiment per leading method, not a generic survey. It may also return a self-contained implementation or patch of its leading method.
 
-Keep raw reasoning and search exploration inside the sub-agent contexts. Require only compact decision memos, normally at most `900` words and `10` direct source links each, rather than transcripts, long quotations, or generic algorithm catalogs. Implementation code is separate from this memo limit. Both agents may create and edit independent reports, prototypes, patches, tests, and complete challenger implementations inside their assigned fresh paths. They must not modify, delete, rename, or overwrite any pre-existing file, must not modify or replace the champion, and must not submit solutions.
+Keep raw reasoning and search exploration inside the sub-agent contexts. Require only compact decision memos, normally at most `900` words and `10` direct source links each, rather than transcripts, long quotations, or generic algorithm catalogs. Implementation code is separate from this memo limit. Both agents may create and edit independent reports, prototypes, patches, tests, and complete challenger implementations inside their assigned fresh paths. Require C++ for those executable artifacts unless the verified task contract requires another language, and always require C++ for a checker, scorer, interactor, simulator, or harness. They must not modify, delete, rename, or overwrite any pre-existing file, must not modify or replace the champion, and must not submit solutions.
 
 ### Mandatory research adoption gate
 
@@ -224,6 +234,6 @@ Locate the failing layer before tuning:
 - public-only gains: seed overfit, noise, outliers, or instance shift;
 - interactive/online failure: state semantics, flush/EOF, belief update, exploration value, or horizon.
 
-Before delivery, after the final method and implementation are selected and all mandatory research-adoption gates are satisfied, use the remaining evaluation budget for a thorough controlled tuning pass on that final solution. Tune every relevant parameter, seed policy, weight, threshold, tie-break, operator mix, restart policy, and runtime allocation that can materially improve the result. Compare against representative fixed evidence and a holdout when available, retain the champion throughout, and stop with enough margin for release validation. Do not deliver an avoidably untuned final implementation.
+Before delivery, after the final method and implementation are selected and all mandatory research-adoption gates are satisfied, use the remaining evaluation budget for a thorough controlled tuning pass on that final solution. Tune relevant parameter, seed policy, weight, threshold, tie-break, operator mix, restart policy, and runtime allocation that can materially improve the result. Compare against representative fixed evidence and a holdout when available, retain the champion throughout, and stop with enough margin for release validation. Do not deliver an avoidably untuned final implementation.
 
 Then compile a clean release build, run targeted regressions and small differential tests, validate the final output/transcript, check runtime margin, and ensure the delivered artifact is the champion. Do not narrate the internal worksheet or request extra confirmation when the task can be completed from available evidence; report only the implementation, tests actually run, and material residual risk.

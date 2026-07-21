@@ -33,7 +33,9 @@ Every call checks budget and response validity. Avoid using `endl` everywhere fo
 
 ## 2. Local simulator and transcript tests
 
-Implement or use a simulator with the same state machine and response semantics. Test:
+Implement or use a simulator with the same state machine and response semantics. Strongly prefer a standalone C++ interactor/simulator for every new implementation, even when the solver is written in another language. Use the official C++ standard/toolchain when specified and portable C++17 otherwise; provide exact build and run commands. If an official interactor is in another language, retain it as an authority and compare the C++ implementation against it on generated transcripts. A delegated agent assigned this work must deliver the compilable `.cpp`, not only pseudocode, Python, or a report.
+
+Test:
 
 - every legal hidden state for tiny sizes;
 - boundary query parameters and exact budget exhaustion;

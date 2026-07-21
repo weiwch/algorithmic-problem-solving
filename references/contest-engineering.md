@@ -158,11 +158,7 @@ Release build should:
 
 Run both modes on the same regression corpus, then rerun release in a clean process/container. Reused containers may retain writable temporary state, so a clean run is part of validation.
 
-## 9. Other target languages
-
-The examples above are C++-first, but the same contract applies elsewhere. Verify the judge's exact runtime and version, integer and recursion semantics, available packages, startup/JIT cost, memory representation, buffered I/O, and process deadline. In Java, watch boxing and heap/stack limits; in Python, bound object-heavy state and interpreter-scale loops; in Rust, check ownership-driven copies, integer conversions, and stable toolchain support. Benchmark the target language rather than translating C++ operation folklore.
-
-## 10. Final audit
+## 9. Final audit
 
 Before submission, answer concretely:
 

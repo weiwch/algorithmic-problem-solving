@@ -1,7 +1,7 @@
 interface:
   display_name: "Algorithmic Problem Solving"
   short_description: "Solve and verify exact, scored, and interactive algorithms"
-  default_prompt: "Use $algorithmic-problem-solving to solve this problem, implement the strongest justified approach, and verify it with the available harness."
+  default_prompt: "Use $algorithmic-problem-solving to solve this problem, implement the strongest justified approach, and verify it with the available harness. Strongly prefer C++ for any new checker, scorer, interactor, simulator, or evaluation harness; require code-producing sub-agents to return compilable C++ with exact build and run commands, allowing only the skill's documented narrow exceptions."
 
 policy:
   allow_implicit_invocation: true

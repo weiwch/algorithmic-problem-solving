@@ -13,7 +13,7 @@ statement and exact I/O format
 constraints, samples, config, and public scoring description
 candidate input/output artifacts
 legal remote feedback already observed
-target language and available libraries
+C++ standard/compiler/flags and available libraries
 ```
 
 Initially withhold the solver implementation, cached-delta code, and the main thread's favored explanation. This reduces correlated modeling bugs. If later debugging requires solver details, expose them only after the checker has written its own contract and tests.
@@ -21,7 +21,8 @@ Initially withhold the solver implementation, cached-delta code, and the main th
 The checker should return:
 
 ```text
-local_check.py or local_check.cpp
+local_check.cpp
+exact build and run commands
 VALID/INVALID and the first failing rule
 raw objective and direction
 estimated score only when its transform is known
@@ -31,6 +32,14 @@ one concise report to the main thread
 ```
 
 Keep checker implementation and exploratory logs separate from the solver. Retain the artifact path, contract summary, failing witnesses, and objective results rather than the entire exploration transcript.
+
+### C++ implementation policy
+
+Strongly prefer C++ for every new independent checker, scorer, interactor, process-level simulator, and evaluation harness, regardless of the solver's language. Use the official C++ standard and compiler flags when specified; otherwise write portable C++17. Compile the implementation and exercise its command-line contract before relying on it.
+
+Apply the same rule to delegated work. A checker/interactor agent must return a compilable `.cpp` file, the exact build command, the exact run command, and its fixtures. Do not accept only Python, pseudocode, or a prose design when executable implementation was requested. If the official evaluator is written in another language, keep it as the authority when appropriate, but still prefer an independent C++ implementation for comparison.
+
+Use another language only when the user explicitly requests it, an official artifact must be modified in place, or a required interface/library makes a faithful C++ implementation genuinely impractical. Record the concrete reason, scope the exception narrowly, and retain C++ for the remaining evaluator components when possible.
 
 ## 2. Minimal checker architecture
 
@@ -58,9 +67,9 @@ Do not require JSON, a database, or a generic experiment framework unless the ta
 
 ### Local simulator rule
 
-- The first simulator may be simple, but cap it to small `n`.
-- For `n >= 1000`, simulator responses must be near `O(query_size log n)` or the simulator must be written in C++.
-- If a local stress run stalls twice, stop and submit a challenger or switch simulator implementation.
+- Write a new simulator or interactor in C++ by default, including the first small-instance version.
+- The first simulator may be simple, but cap deliberately slow logic to small `n`.
+- For `n >= 1000`, keep responses near `O(query_size log n)` even in C++ unless a measured tighter bound is unnecessary.
 
 ## 3. Parsing obligations
 
