@@ -1,9 +1,6 @@
 # Interactive, Reactive, and Uncertain Problems
 
-Use this reference for hidden-state identification, query-limited tasks, online
-control, noisy feedback, and repeated-round learning. First distinguish the
-interaction type: a protocol bug, an inference bug, and a weak online policy
-need different fixes.
+Use this reference for hidden-state identification, query-limited tasks, online control, noisy feedback, and repeated-round learning. First distinguish the interaction type: a protocol bug, an inference bug, and a weak online policy need different fixes.
 
 ## 1. Interaction contract
 
@@ -21,16 +18,7 @@ state reset/persistence between rounds or cases
 score as a function of correctness, queries, actions, and time
 ```
 
-Replay the interactor semantics literally. Do not replace an accumulator,
-rounding rule, sequential operation, or state transition with an algebraically
-similar interpretation unless equivalence is proved. When prose and executable
-logic differ, document the discrepancy and implement against the authoritative
-evaluation contract. Also derive their legal intersection. Prefer an
-intersection-compliant query strategy when it reaches the same correctness,
-score, and budget; it is less brittle to evaluator changes and alternate local
-harnesses. When exploiting an executable-only allowance is materially better,
-name the dependency, exercise the exact guard in a test, and retain a fallback
-when practical.
+Replay the interactor semantics literally. Do not replace an accumulator, rounding rule, sequential operation, or state transition with an algebraically similar interpretation unless equivalence is proved. When prose and executable logic differ, document the discrepancy and implement against the authoritative evaluation contract. Also derive their legal intersection. Prefer an intersection-compliant query strategy when it reaches the same correctness, score, and budget; it is less brittle to evaluator changes and alternate local harnesses. When exploiting an executable-only allowance is materially better, name the dependency, exercise the exact guard in a test, and retain a fallback when practical.
 
 Isolate protocol code:
 
@@ -41,14 +29,11 @@ act(action) -> observation  // for reactive rounds
 answer(solution)            // final serialization and termination
 ```
 
-Every call checks budget and response validity. Avoid using `endl` everywhere
-for performance, but flush exactly when the protocol requires it. Exit
-immediately on judge-error/EOF rather than continuing with stale data.
+Every call checks budget and response validity. Avoid using `endl` everywhere for performance, but flush exactly when the protocol requires it. Exit immediately on judge-error/EOF rather than continuing with stale data.
 
 ## 2. Local simulator and transcript tests
 
-Implement or use a simulator with the same state machine and response semantics.
-Test:
+Implement or use a simulator with the same state machine and response semantics. Test:
 
 - every legal hidden state for tiny sizes;
 - boundary query parameters and exact budget exhaustion;
@@ -57,9 +42,7 @@ Test:
 - early error, EOF, and success termination;
 - solver output captured through real pipes, not only direct function calls.
 
-Keep the solver unaware of simulator-only truth. The simulator can inspect the
-hidden instance; the solver receives only legal observations. Compare simulator
-responses against the official interactor on generated cases when tools allow.
+Keep the solver unaware of simulator-only truth. The simulator can inspect the hidden instance; the solver receives only legal observations. Compare simulator responses against the official interactor on generated cases when tools allow.
 
 ## 3. Interactive identification
 
@@ -71,16 +54,11 @@ R(h, q) = response for hidden state h and query q
 H_{t+1} = {h in H_t : R(h, q_t) matches observed response}
 ```
 
-For stochastic responses, maintain likelihood or a confidence set rather than
-eliminating on one mismatch.
+For stochastic responses, maintain likelihood or a confidence set rather than eliminating on one mismatch.
 
 ### Information lower bounds
 
-If there are `|H|` equally plausible hypotheses and each response has at most
-`b` outcomes, any decision tree needs at least `ceil(log_b |H|)` queries in the
-best balanced case. Symmetry and indistinguishable hypotheses may increase the
-requirement or make exact recovery impossible. Use the lower bound to detect a
-query-budget mismatch before coding.
+If there are `|H|` equally plausible hypotheses and each response has at most `b` outcomes, any decision tree needs at least `ceil(log_b |H|)` queries in the best balanced case. Symmetry and indistinguishable hypotheses may increase the requirement or make exact recovery impossible. Use the lower bound to detect a query-budget mismatch before coding.
 
 ### Query choice
 
@@ -94,22 +72,15 @@ Candidate criteria:
 - batch queries that recover several independent bits/features;
 - robustness margin under noise or adversarial perturbation.
 
-The query's value is defined by the exact response semantics. Validate claimed
-uniqueness globally across all relevant hypotheses, not only through local
-edits or a sampled codebook. Look for pairs that the entire planned transcript
-cannot distinguish.
+The query's value is defined by the exact response semantics. Validate claimed uniqueness globally across all relevant hypotheses, not only through local edits or a sampled codebook. Look for pairs that the entire planned transcript cannot distinguish.
 
 ### Adversarial versus stochastic judges
 
-- For adversarial consistent responses, optimize worst-case partitions and
-  maintain the full feasible set/invariants.
-- For a known noise distribution, use repeated measurements, likelihood,
-  error-correcting separation, sequential tests, or robust estimators.
-- For unknown noise, reserve calibration queries and avoid brittle hard
-  elimination.
+- For adversarial consistent responses, optimize worst-case partitions and maintain the full feasible set/invariants.
+- For a known noise distribution, use repeated measurements, likelihood, error-correcting separation, sequential tests, or robust estimators.
+- For unknown noise, reserve calibration queries and avoid brittle hard elimination.
 
-Never multiply per-query success probabilities under hidden dependence without
-justification.
+Never multiply per-query success probabilities under hidden dependence without justification.
 
 ## 4. Reactive online control
 
@@ -124,11 +95,9 @@ Separate three layers:
 
 1. **Estimator:** what latent quantities are inferred, with what uncertainty?
 2. **Planner:** given the current model, what exact/heuristic action is best?
-3. **Explorer:** when is a less immediately rewarding action worth its
-   information for future decisions?
+3. **Explorer:** when is a less immediately rewarding action worth its information for future decisions?
 
-This separation permits unit tests: synthetic truth for the estimator, known
-parameters for the planner, and controlled horizons for the exploration rule.
+This separation permits unit tests: synthetic truth for the estimator, known parameters for the planner, and controlled horizons for the exploration rule.
 
 ### Model design
 
@@ -141,14 +110,11 @@ Choose the simplest identifiable model that supports decisions:
 - change detection or recency weighting for drift;
 - censored/delayed-feedback likelihood when the full outcome is not observed.
 
-Aggregate feedback often leaves parameters non-identifiable. Optimize prediction
-of decision-relevant totals rather than pretending every latent variable is
-known. Add regularization and test rank/conditioning of the observation design.
+Aggregate feedback often leaves parameters non-identifiable. Optimize prediction of decision-relevant totals rather than pretending every latent variable is known. Add regularization and test rank/conditioning of the observation design.
 
 ### Value of information
 
-An exploratory query/action is useful when its expected reduction in future
-decision loss exceeds its immediate cost and opportunity cost. Approximate:
+An exploratory query/action is useful when its expected reduction in future decision loss exceeds its immediate cost and opportunity cost. Approximate:
 
 ```text
 VOI(q) = expected future objective with posterior after q
@@ -156,15 +122,9 @@ VOI(q) = expected future objective with posterior after q
          - direct cost(q)
 ```
 
-Exact VOI is usually expensive; practical proxies include uncertainty along
-likely routes, disagreement between plausible models, expected partition
-balance, or confidence-bound optimism. Tie exploration to later decisions, not
-parameter uncertainty in irrelevant regions.
+Exact VOI is usually expensive; practical proxies include uncertainty along likely routes, disagreement between plausible models, expected partition balance, or confidence-bound optimism. Tie exploration to later decisions, not parameter uncertainty in irrelevant regions.
 
-Use a horizon-aware schedule: earlier rounds can explore more; later or
-heavily-weighted rounds should exploit. Do not hard-code a switch solely from a
-benchmark round number when confidence and remaining opportunity provide a
-better signal.
+Use a horizon-aware schedule: earlier rounds can explore more; later or heavily-weighted rounds should exploit. Do not hard-code a switch solely from a benchmark round number when confidence and remaining opportunity provide a better signal.
 
 ## 5. Noisy scoring and repeated rounds
 
@@ -177,9 +137,7 @@ solver RNG
 host/runtime noise
 ```
 
-Control one source at a time. Fix solver RNG while diagnosing model updates,
-pair candidates on the same instances and judge seeds where allowed, and repeat
-measurements only when the observation noise warrants it.
+Control one source at a time. Fix solver RNG while diagnosing model updates, pair candidates on the same instances and judge seeds where allowed, and repeat measurements only when the observation noise warrants it.
 
 Use robust summaries and per-round traces:
 
@@ -190,8 +148,7 @@ Use robust summaries and per-round traces:
 - score and runtime by instance feature;
 - median/quantiles in addition to mean.
 
-Feedback may be delayed or noisy; do not treat one higher scalar score as proof
-that the latest model is better.
+Feedback may be delayed or noisy; do not treat one higher scalar score as proof that the latest model is better.
 
 ## 6. Online planning patterns
 
@@ -204,9 +161,7 @@ Common hybrids:
 - rolling-horizon construction with bounded local repair;
 - a portfolio selected by current confidence and remaining time.
 
-When an action changes future feasibility, plan with the actual state transition
-and reserve recovery slack. A myopic objective can destroy reachability even if
-the immediate reward is high.
+When an action changes future feasibility, plan with the actual state transition and reserve recovery slack. A myopic objective can destroy reachability even if the immediate reward is high.
 
 ## 7. Safety and fallback
 
@@ -219,9 +174,7 @@ Maintain a legal response/action under every reachable internal state:
 - last-known-valid model/policy checkpoint;
 - release behavior when input is malformed or judge terminates.
 
-For scored identification, decide whether a partial but legal answer beats
-spending the remaining budget. For online control, reserve enough actions to
-finish mandatory coverage/return-to-start/output requirements.
+For scored identification, decide whether a partial but legal answer beats spending the remaining budget. For online control, reserve enough actions to finish mandatory coverage/return-to-start/output requirements.
 
 ## 8. Diagnostics
 

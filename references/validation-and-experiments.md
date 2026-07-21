@@ -1,7 +1,6 @@
 # Lightweight Validation and Iteration
 
-Use the smallest test loop that can falsify the current algorithmic hypothesis.
-Do not begin with a generic benchmark platform.
+Use the smallest test loop that can falsify the current algorithmic hypothesis. Do not begin with a generic benchmark platform.
 
 ## 1. Validation ladder
 
@@ -20,9 +19,7 @@ Stop and fix the first failing layer before running a larger campaign.
 
 ## 2. Exact and constructive problems
 
-For an exact solver, prefer a tiny obviously correct oracle over a second
-optimized implementation. Generate cases small enough for full enumeration and
-compare the complete answer or a canonical witness.
+For an exact solver, prefer a tiny obviously correct oracle over a second optimized implementation. Generate cases small enough for full enumeration and compare the complete answer or a canonical witness.
 
 Check:
 
@@ -33,18 +30,16 @@ Check:
 - dense and sparse extremes;
 - the first size where an optimization changes behavior.
 
-For constructive output, validate syntax, hard constraints, and final
-serialization independently. A promised-feasible input does not prove the
-construction reaches a valid witness.
+For constructive output, validate syntax, hard constraints, and final serialization independently. A promised-feasible input does not prove the construction reaches a valid witness.
 
 ## 3. Scored solvers
 
 Always keep:
 
 ```text
-baseline: simplest guaranteed-valid output
-current: mutable search state
-best: best independently validated legal state
+fallback: simplest guaranteed-valid emergency output
+challenger/current: mutable experimental candidate
+champion: best independently validated legal artifact
 ```
 
 Before tuning quality:
@@ -56,9 +51,7 @@ Before tuning quality:
 - confirm score direction and any clamp, threshold, or normalization;
 - verify the internal deadline includes a safety margin.
 
-Read
-[checker-and-local-evaluation.md](checker-and-local-evaluation.md)
-when the official checker/scorer is absent or doubtful.
+Read [checker-and-local-evaluation.md](checker-and-local-evaluation.md) when the official checker/scorer is absent or doubtful.
 
 ## 4. Minimal champion/challenger loop
 
@@ -77,8 +70,7 @@ Use a direct shell command or a short task-specific script. Default to:
 - saved failing inputs and outputs;
 - per-case results, not only an aggregate.
 
-Promote only when the challenger stays legal, fits the budget with margin, and
-improves the relevant fixed evidence. Revert the challenger otherwise.
+Promote only when the challenger stays legal, fits the budget with margin, and improves the relevant fixed evidence. Revert the challenger otherwise.
 
 ## 5. Randomness and holdouts
 
@@ -88,18 +80,13 @@ Keep randomness sources distinct:
 instance seed | solver seed | judge/noise seed | host/runtime noise
 ```
 
-Pair champion and challenger on the same inputs and allowed noise seeds. Tune on
-development cases, then check an untouched set. Do not repeatedly select against
-one public set or one lucky solver seed.
+Pair champion and challenger on the same inputs and allowed noise seeds. Tune on development cases, then check an untouched set. Do not repeatedly select against one public set or one lucky solver seed.
 
-Three to five fixed seeds are usually enough to reject a clearly weak idea.
-Expand only when results are close, variance is material, or remote scoring is
-noisy.
+Three to five fixed seeds are usually enough to reject a clearly weak idea. Expand only when results are close, variance is material, or remote scoring is noisy.
 
 ## 6. Metamorphic tests
 
-When an exact oracle is hard, transform an instance in a way with a known
-effect:
+When an exact oracle is hard, transform an instance in a way with a known effect:
 
 - permute labels or input order when semantics are invariant;
 - add an isolated or dominated object with predictable behavior;
@@ -111,8 +98,7 @@ Verify the expected relationship, not necessarily a fixed output string.
 
 ## 7. When heavier evidence is justified
 
-Use larger seed sets, quantiles, confidence intervals, or formal benchmark
-automation only when:
+Use larger seed sets, quantiles, confidence intervals, or formal benchmark automation only when:
 
 - stochastic variance can reverse the decision;
 - candidates differ by a small margin;
@@ -120,8 +106,7 @@ automation only when:
 - the work is a long-running solver project rather than one problem;
 - a formal report requires reproducible aggregate statistics.
 
-Even then, begin with paired per-case deltas and explicit invalid/timeout counts.
-Do not let statistical machinery hide contract or checker errors.
+Even then, begin with paired per-case deltas and explicit invalid/timeout counts. Do not let statistical machinery hide contract or checker errors.
 
 ## 8. Failure-directed next action
 
@@ -132,14 +117,12 @@ Map evidence to the next layer:
 | Invalid output | parser, bounds, reconstruction, checker assumptions |
 | Exact mismatch | smallest brute counterexample and proof assumption |
 | TLE/MLE | measured hot path, state count, copying, allocation |
-| Legal but very low score | objective direction, baseline, representation, construction |
+| Legal but very low score | objective direction, external reference/bound gap, representation, construction |
 | Local search plateau | delta correctness, reachability, compound moves |
 | Seed-sensitive gain | per-instance deltas, outliers, overfit |
 | Local/remote disagreement | checker contract and score transform |
 
-Change the model, representation, or algorithm family when evidence says the
-current route is structurally weak. Do not answer every failure with another
-parameter.
+If the current route appears structurally weak but the plateau criteria are not yet met, test one falsifiable structural challenger. Once the criteria are met, return to [the mandatory fresh-context plateau escape](../SKILL.md#mandatory-fresh-context-plateau-escape) before choosing another model, representation, or algorithm family. Do not answer every failure with another parameter or bypass the plateau gate by expanding the test campaign.
 
 ## 9. Release gate
 

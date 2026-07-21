@@ -1,10 +1,8 @@
 # Quantified Heuristic Search
 
-Use this reference for score-based construction, approximation, local search,
-and hybrid exact/heuristic solvers after the exact-feasibility gate. The central
-question is not which metaheuristic sounds sophisticated. It is whether the
-representation, moves, evaluation, and useful-event count form an informative
-reachable process within the time limit.
+Use this reference for score-based construction, approximation, local search, and hybrid exact/heuristic solvers after the exact-feasibility gate. The central question is not which metaheuristic sounds sophisticated. It is whether the representation, moves, evaluation, and useful-event count form an informative reachable process within the time limit.
+
+If the evidence already meets the plateau criteria in `SKILL.md`, complete [the mandatory fresh-context plateau escape](../SKILL.md#mandatory-fresh-context-plateau-escape) before selecting another representation, optimizer, or method family. Use this reference to test the returned hypotheses, not to bypass that gate.
 
 ## 1. Search budget
 
@@ -19,11 +17,7 @@ T_search  safety_factor * official_limit - I/O - final validation - overhead
 N_total   approximately (T_search - restarts * C_init) / mean(C_move)
 ```
 
-Measure representative kernels. Include copying, allocation, cache misses,
-hashing, RNG, timer calls, logging, and variable-cost tails. If the timer is
-checked every `B` moves, bound overshoot by `B * worst_relevant_move_time`.
-Reserve more margin for slow judges, shared hosts, interactive I/O, recursion,
-repairs, or exact subsolves. Never consume the official limit exactly.
+Measure representative kernels. Include copying, allocation, cache misses, hashing, RNG, timer calls, logging, and variable-cost tails. If the timer is checked every `B` moves, bound overshoot by `B * worst_relevant_move_time`. Reserve more margin for slow judges, shared hosts, interactive I/O, recursion, repairs, or exact subsolves. Never consume the official limit exactly.
 
 Raw search size alone is not actionable:
 
@@ -32,8 +26,7 @@ S_raw = product of variable domain sizes
 S_effective = S_raw after constraints, symmetry, decomposition, and reachability
 ```
 
-Compare the number and diversity of states that can actually be evaluated with
-`S_effective` and with the basin structure implied by the moves.
+Compare the number and diversity of states that can actually be evaluated with `S_effective` and with the basin structure implied by the moves.
 
 ## 2. Quantify useful events
 
@@ -44,9 +37,7 @@ P(at least one hit in N trials) = 1 - (1-p)^N
 N needed for probability q      = ceil(log(1-q) / log(1-p))
 ```
 
-For small `p`, a 99% hit probability needs about `N*p >= 4.6`. Do not multiply
-probabilities blindly when events are dependent. Use conditional reasoning,
-bounds, or pilot measurements.
+For small `p`, a 99% hit probability needs about `N*p >= 4.6`. Do not multiply probabilities blindly when events are dependent. Use conditional reasoning, bounds, or pilot measurements.
 
 Instrument the transition funnel per move type:
 
@@ -60,19 +51,15 @@ gain/s        = proposals/s * p_valid * p_accept
                 * E[max(true_delta, 0) | accepted]
 ```
 
-Also record move-cost mean/p95, delta distribution, distinct-state/hash rate,
-and best-update time. Interpret low rates causally:
+Also record representative move cost, delta distribution, distinct-state/hash rate, and best-update time. Interpret low rates causally:
 
 - low validity: proposal ignores constraints or representation is wrong;
 - high acceptance but little structural change: move edits irrelevant tokens;
 - truth stalls while proxy rises: surrogate mismatch;
 - more time gives no gain: neighborhood ceiling or disconnected reachability;
-- occasional huge gain with bad median: risky heavy-tail policy needing explicit
-  score-system justification.
+- occasional huge gain with bad median: risky heavy-tail policy needing explicit score-system justification.
 
-For unknown hit rates, pilot `m` comparable trials. If zero hits occur, `3/m`
-is a common rough 95% upper bound for `p`; if even that gives `N_budget*p << 1`,
-redesign rather than hoping.
+For unknown hit rates, pilot `m` comparable trials. If zero hits occur, `3/m` is a common rough 95% upper bound for `p`; if even that gives `N_budget*p << 1`, redesign rather than hoping.
 
 ## 3. Representation and invariants
 
@@ -86,9 +73,7 @@ blocks/segments rather than individual permutation tokens
 regions/boundaries/spatial adjacency rather than full-grid rescans
 ```
 
-Model constraints at their real granularity. An edge conflict need not forbid a
-whole vertex; one occupied interval need not block a full day; independent
-channels/capacities should remain separate.
+Model constraints at their real granularity. An edge conflict need not forbid a whole vertex; one occupied interval need not block a full day; independent channels/capacities should remain separate.
 
 Prefer:
 
@@ -96,9 +81,7 @@ Prefer:
 valid state -> validity-preserving move -> valid state
 ```
 
-Temporary infeasibility is justified only when violation is cheap and
-informative, repair is reliable and bounded, adaptive penalties return to
-feasibility, or infeasible states connect otherwise separated feasible regions.
+Temporary infeasibility is justified only when violation is cheap and informative, repair is reliable and bounded, adaptive penalties return to feasibility, or infeasible states connect otherwise separated feasible regions.
 
 Maintain explicit roles:
 
@@ -109,13 +92,11 @@ candidate move, affected set, delta, rollback log
 primary structure, inverse indices, local contributions, constraint counts
 ```
 
-Remove equivalent states using canonical labels, fixed representatives, sorted
-interchangeable groups, symmetry-breaking directions, or hashes. Confirm that
-canonicalization preserves objective and reachability.
+Remove equivalent states using canonical labels, fixed representatives, sorted interchangeable groups, symmetry-breaking directions, or hashes. Confirm that canonicalization preserves objective and reachability.
 
-## 4. Baseline and construction
+## 4. Fallback and construction
 
-Create a guaranteed valid fallback first. Candidate constructors include:
+Retain the champion. If early termination can erase all value and no simple guaranteed-valid fallback exists, add one without replacing the champion. Construction experiments remain challengers. Candidate constructors include:
 
 - deterministic or randomized greedy;
 - restricted candidate lists / GRASP;
@@ -127,10 +108,7 @@ Create a guaranteed valid fallback first. Candidate constructors include:
 - warm start from a legal prior incumbent;
 - multiple deliberately diverse starts.
 
-Measure construction time, validity, raw score, diversity, and score after a
-fixed improvement budget. The best raw start may not have the best improvement
-potential. Keep construction diversity tied to a hypothesis about different
-basins, not merely different RNG seeds.
+Measure construction time, validity, raw score, diversity, and score after a fixed improvement budget. The best raw start may not have the best improvement potential. Keep construction diversity tied to a hypothesis about different basins, not merely different RNG seeds.
 
 ## 5. Incremental evaluation
 
@@ -141,8 +119,7 @@ delta = sum over i in A of (new_local_i - old_local_i)
 sample -> identify affected data -> precheck -> apply/delta -> accept or undo
 ```
 
-Implement `apply`, `undo`, `delta`, `validate`, and full true-score
-recomputation. During development, periodically assert:
+Implement `apply`, `undo`, `delta`, `validate`, and full true-score recomputation. During development, periodically assert:
 
 ```text
 cached score == full score
@@ -150,16 +127,11 @@ cached constraints == full constraints
 undo(apply(state, move)) == original state
 ```
 
-Target `O(1)`, `O(log n)`, or genuinely local `O(k)` transitions using inverse
-indices, prefix/Fenwick/segment structures, candidate lists, reusable buffers,
-delayed updates, and rollback logs. Avoid full-state copies, allocations, and
-full rescoring in the inner loop unless the state is demonstrably small.
+Target `O(1)`, `O(log n)`, or genuinely local `O(k)` transitions using inverse indices, prefix/Fenwick/segment structures, candidate lists, reusable buffers, delayed updates, and rollback logs. Avoid full-state copies, allocations, and full rescoring in the inner loop unless the state is demonstrably small.
 
 ## 6. Neighborhoods and reachability
 
-A useful move should preserve or cheaply restore legality, change score-relevant
-structure, support fast delta/undo, and combine with other moves to reach
-meaningfully different states.
+A useful move should preserve or cheaply restore legality, change score-relevant structure, support fast delta/undo, and combine with other moves to reach meaningfully different states.
 
 Use multiple scales when the problem requires them:
 
@@ -169,17 +141,9 @@ medium: block exchange, cycle/exchange chain, merge/split, subpath reroute
 large: region rebuild, destroy-and-repair, restart, exact local reoptimization
 ```
 
-Check reachability explicitly. Repeated legal moves may accidentally preserve
-parity, order, components, topology, or a hidden count. Simulated annealing
-cannot cross a boundary that no move can cross. Add the missing transition,
-perturbation, restart, temporary infeasibility, or exact local solve.
+Check reachability explicitly. Repeated legal moves may accidentally preserve parity, order, components, topology, or a hidden count. Simulated annealing cannot cross a boundary that no move can cross. Add the missing transition, perturbation, restart, temporary infeasibility, or exact local solve.
 
-Once a simple neighborhood reaches a local optimum, derive the exact delta of
-the smallest coordinated move and necessary conditions for positive gain.
-Those conditions often reduce a nominal quadratic or combinatorial scan to a
-small structural candidate set. Benchmark that stronger, problem-specific
-neighborhood and its gain per second before using tabu, annealing, or random
-walks to compensate for weak moves.
+Once a simple neighborhood reaches a local optimum, derive the exact delta of the smallest coordinated move and necessary conditions for positive gain. Those conditions often reduce a nominal quadratic or combinatorial scan to a small structural candidate set. Benchmark that stronger, problem-specific neighborhood and its gain per second before using tabu, annealing, or random walks to compensate for weak moves.
 
 For LNS:
 
@@ -188,18 +152,13 @@ select region -> remove/relax -> randomized or exact repair ->
 score complete state -> accept/reject -> update best
 ```
 
-Bound ruin size and repair time. Schedule operators from measured gain/second,
-best-update rate, phase, and stagnation. Retain a rare barrier-crossing move when
-its long-term value is demonstrated, even if immediate delta is weak.
+Bound ruin size and repair time. Schedule operators from measured gain/second, best-update rate, phase, and stagnation. Retain a rare barrier-crossing move when its long-term value is demonstrated, even if immediate delta is weak.
 
 ## 7. True objective, proxies, and penalties
 
-The true checker score is authoritative for the best state, final output, and
-experiments. A proxy or penalty may guide `current` only.
+The true checker score is authoritative for the best state, final output, and experiments. A proxy or penalty may guide `current` only.
 
-Use a surrogate when the true score is sparse, discontinuous, or flat. Build it
-from interpretable partial progress such as completion, repair distance,
-connectivity, utilization, balance, or a bound gap. Then test alignment:
+Use a surrogate when the true score is sparse, discontinuous, or flat. Build it from interpretable partial progress such as completion, repair distance, connectivity, utilization, balance, or a bound gap. Then test alignment:
 
 - sample transitions and compare proxy and true delta signs/ranks;
 - inspect extrema and boundary behavior;
@@ -235,15 +194,9 @@ Choose after state, moves, evaluation, and budget are known.
 | MCTS | Sequential decisions, informative rollouts, reusable states | High branching, noisy rollout, few simulations |
 | Exact local solve | Fixing most variables yields a tractable subproblem | Calls are too large/frequent or boundaries mis-modeled |
 
-Do not default to a population method when independent multi-start local search
-uses the same evaluations more effectively.
+Do not default to a population method when independent multi-start local search uses the same evaluations more effectively.
 
-Evaluate stochastic optimizers under the scoring rule that will actually be
-used. If one program run may launch `N` independent starts and retain the best,
-compare the empirical best-of-`N` distribution, not only single-run means. For
-continuous parameters, use a small designed sweep, random/low-discrepancy
-search, racing, or a suitable optimizer; keep a locked set and count every
-configuration tried so tuning noise is not mistaken for progress.
+Evaluate stochastic optimizers under the scoring rule that will actually be used. If one program run may launch `N` independent starts and retain the best, compare the empirical best-of-`N` distribution, not only single-run means. For continuous parameters, use a small designed sweep, random/low-discrepancy search, racing, or a suitable optimizer; keep a locked set and count every configuration tried so tuning noise is not mistaken for progress.
 
 ## 9. Calibration
 
@@ -264,15 +217,11 @@ Population work approximately population * generations
 MCTS work approximately search_time / rollout_cost
 ```
 
-Estimate `d` from observed loss quantiles and choose desired early/late
-acceptance. Recalibrate when representation, score normalization, or move mix
-changes. Do not copy fixed temperatures, move percentages, or ruin sizes across
-instances without scale normalization.
+Estimate `d` from observed loss quantiles and choose desired early/late acceptance. Recalibrate when representation, score normalization, or move mix changes. Do not copy fixed temperatures, move percentages, or ruin sizes across instances without scale normalization.
 
 ## 10. Time policy and multiple instances
 
-Use a monotonic clock and an internal deadline. Time controls both stopping and
-policy:
+Use a monotonic clock and an internal deadline. Time controls both stopping and policy:
 
 ```text
 early: diverse construction / larger moves / model learning
@@ -281,10 +230,7 @@ late: intensification and safe local polish
 final: validation and serialization of saved best
 ```
 
-For several instances sharing a total budget, allocate by measured move cost,
-size, log search scale, gap to bound/baseline, or pilot improvement rate. Retain
-I/O and worst-case slack. Define stagnation in both iterations and time when
-move costs vary.
+For several instances sharing a total budget, allocate by measured move cost, size, log search scale, gap to a bound or external scoring baseline, or pilot improvement rate. Retain I/O and worst-case slack. Define stagnation in both iterations and time when move costs vary.
 
 ## 11. Failure-directed iteration
 

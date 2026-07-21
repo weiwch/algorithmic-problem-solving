@@ -1,38 +1,10 @@
 # Algorithm Technique Selection
 
-Use this catalog after formalization. It supplies routing questions and failure
-conditions, not copy-paste code. Generate only the implementation the problem
-needs, then compile and test it; static template libraries often contain hidden
-convention, overflow, memory, or boundary assumptions.
+Use this catalog after formalization. It supplies routing questions and failure conditions, not copy-paste code. Generate only the implementation the problem needs, then compile and test it; static template libraries often contain hidden convention, overflow, memory, or boundary assumptions.
 
-## Optional research escalation for established problem families
+## Plateau gate
 
-Do not delay the first concrete solver for a literature review. First derive a
-plausible route from the contract and bounds and, when code is requested, get a
-baseline compiling on focused tests.
-
-Research a mature open optimization problem or standard benchmark only when the
-user asks for it, a delicate external fact or constant needs verification, or
-the first baseline and controlled attempts show that the current family has
-stalled. Time-box the research:
-
-1. identify the canonical problem name and important variants;
-2. search classic papers, surveys, recent competitive methods, benchmark rules,
-   and maintained public implementations;
-3. extract formulations, lower bounds, relaxations, constructions,
-   neighborhoods, parameter scales, and engineering constraints;
-4. compare every source's assumptions with the current input, objective,
-   evaluator, and resource limits;
-5. reproduce a simple published baseline before combining or extending ideas.
-
-Prefer primary papers, official benchmark documentation, and original source
-repositories. Public code is evidence and a baseline, not permission to copy 
-hidden outputs, private tuning data, or benchmark-specific answers.
-
-If the user explicitly requests or permits delegation, a fresh research
-sub-agent can reduce anchoring when the literature is broad. Otherwise research
-directly. Ask for a ranked shortlist and discriminating experiments, not a
-generic survey.
+If this technique-selection failure occurs after the plateau criteria in `SKILL.md` are met, do not choose another method family from this catalog yet. First complete [the mandatory fresh-context plateau escape](../SKILL.md#mandatory-fresh-context-plateau-escape), then use this catalog to compare the returned routes. Before a plateau, use the failed complexity, proof, or brute-test evidence to narrow candidates; loading this file alone does not justify literature research.
 
 ## Fundamental transforms
 
@@ -62,9 +34,7 @@ generic survey.
 | Static tree path/subtree | Euler tour, LCA, HLD, DSU-on-tree, centroid decomposition | Choose path updates vs subtree aggregation vs distance decomposition precisely |
 | Dynamic forest paths | Link-cut tree or offline rollback/decomposition | Static alternatives are simpler; splay invariants and memory are fully tested |
 
-For a graph reduction, document what vertices and edges mean and prove both
-directions. Do not use an advanced tree structure merely because the input is a
-tree.
+For a graph reduction, document what vertices and edges mean and prove both directions. Do not use an advanced tree structure merely because the input is a tree.
 
 ## Dynamic programming and exact search
 
@@ -79,8 +49,7 @@ tree.
 | Few resources/parameters | Multidimensional DP, Pareto frontier | State explosion and unsafe dominance pruning |
 | Hard combinatorial core | Branch-and-bound, memoized DFS, iterative deepening | Weak bound/order, duplicate states, exponential tail |
 
-Always build a small brute oracle before applying a subtle DP optimization.
-Compare the optimized recurrence against the unoptimized one on random cases.
+Always build a small brute oracle before applying a subtle DP optimization. Compare the optimized recurrence against the unoptimized one on random cases.
 
 ## Strings
 
@@ -93,8 +62,7 @@ Compare the optimized recurrence against the unoptimized one on random cases.
 | Online distinct substrings/repetitions | Suffix automaton | Clone transitions, occurrence propagation |
 | Fast equality as a filter | Double/randomized hashing | Collision remains possible; adversarial inputs and normalization |
 
-Prefer deterministic algorithms when equality must be certain. If hashing is
-used in an exact result, combine independent hashes or verify candidates.
+Prefer deterministic algorithms when equality must be certain. If hashing is used in an exact result, combine independent hashes or verify candidates.
 
 ## Number theory and algebra
 
@@ -107,18 +75,13 @@ used in an exact result, combine independent hashes or verify candidates.
 | Polynomial convolution | NTT/FFT | Modulus/root limits, padding, signed recovery, floating error |
 | Binomial modulo prime | Factorials/inverses, Lucas when digits in base `p` are small | Composite modulus needs a different method |
 
-Do not trust remembered primality witness bounds or root constants without a
-known source and targeted tests.
+Do not trust remembered primality witness bounds or root constants without a known source and targeted tests.
 
-For a standalone template request, pin down the supported domain and operations,
-then verify delicate constants, witness sets, and asymptotic claims against an
-authoritative source available in the environment. Return only the requested
-implementation plus focused tests; do not paste an unrelated template catalog.
+For a standalone template request, pin down the supported domain and operations, then verify delicate constants, witness sets, and asymptotic claims against an authoritative source available in the environment. Return only the requested implementation plus focused tests; do not paste an unrelated template catalog.
 
 ## Geometry
 
-First choose numeric semantics: exact integer/rational predicates where possible,
-or floating point with a scale-aware tolerance and consistent boundary policy.
+First choose numeric semantics: exact integer/rational predicates where possible, or floating point with a scale-aware tolerance and consistent boundary policy.
 
 | Need | Candidate | Pitfalls |
 |---|---|---|
@@ -128,8 +91,7 @@ or floating point with a scale-aware tolerance and consistent boundary policy.
 | Nearest pair | Divide-and-conquer or sweep | Duplicate points, strip invariant, squared overflow |
 | Half-plane feasibility | Half-plane intersection or 2D LP | Parallel lines, unbounded/degenerate result, epsilon ordering |
 
-Test geometry with coincident, collinear, tangent, zero-area, extreme-coordinate,
-and reversed-orientation cases.
+Test geometry with coincident, collinear, tangent, zero-area, extreme-coordinate, and reversed-orientation cases.
 
 ## Range and advanced structures
 
@@ -139,16 +101,11 @@ Choose the operation algebra before the structure:
 query type | point/range update | online/offline | persistence | coordinate size
 ```
 
-- Fenwick trees suit prefix groups such as sums/xor; arbitrary min with updates
-  does not inherit the same inverse trick.
-- Segment tree lazy tags require a defined composition order. Test sequences of
-  overlapping updates, not only isolated operations.
-- Sparse-table O(1) overlapping queries require idempotence (for example min or
-  gcd), not general sums.
-- Persistent structures need heap/static-pool sizing and must never mutate
-  shared nodes. Avoid giant node arrays as local stack objects.
-- Implicit treaps need push-before-split/merge and deterministic reproducible RNG
-  during debugging.
+- Fenwick trees suit prefix groups such as sums/xor; arbitrary min with updates does not inherit the same inverse trick.
+- Segment tree lazy tags require a defined composition order. Test sequences of overlapping updates, not only isolated operations.
+- Sparse-table O(1) overlapping queries require idempotence (for example min or gcd), not general sums.
+- Persistent structures need heap/static-pool sizing and must never mutate shared nodes. Avoid giant node arrays as local stack objects.
+- Implicit treaps need push-before-split/merge and deterministic reproducible RNG during debugging.
 - Cartesian trees can be height `O(n)`; do not call them balanced search trees.
 
 ## Selecting among several fits
@@ -161,6 +118,4 @@ Rank candidates by:
 4. ease of brute/differential validation;
 5. extensibility to reconstruction or scoring requirements.
 
-Use the least complex candidate that clears all five. When two candidates are
-close, prototype their dominant kernel on representative sizes instead of
-arguing from folklore constants.
+Use the least complex candidate that clears all five. When two candidates are close, prototype their dominant kernel on representative sizes instead of arguing from folklore constants.
