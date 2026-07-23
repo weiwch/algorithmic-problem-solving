@@ -67,7 +67,7 @@ Never infer a score transform merely from leaderboard behavior.
 
 Implement the evaluator through a separate code path. Do not copy solver feasibility tests, cached-delta formulas, or the solver's favored interpretation before independently writing the evaluator contract and fixtures.
 
-For the mandatory interactive/heuristic gate, delegate evaluator implementation to a dedicated fresh-context sub-agent whenever delegation is available. Do not assign that sub-agent to implement or tune the solver or challenger it will evaluate. Treat this executor-evaluator separation as the default implementation path, not an optional review.
+For the mandatory interactive or scored heuristic/optimization gate, MUST delegate evaluator ownership to a dedicated fresh-context sub-agent whenever delegation is available. Do not assign that sub-agent to implement or tune the solver or challenger it will evaluate, or later reuse it as a challenger owner, trajectory critic, method researcher, or other method reviewer for the same task. Treat this executor-evaluator separation as the default implementation path, not an optional review. If the required evaluator is missing or insufficient, the evaluator owner must implement, compile, and validate the missing executable artifact. If a faithful official evaluator already exists, it must instead own independent contract recovery, adversarial fixtures, validation, and any required runner or harness; do not rewrite official source merely to manufacture ownership separation. Require the evaluator owner to read this entire skill and own its end-to-end deliverables; a review memo or pseudocode does not discharge that ownership.
 
 The evaluator sub-agent's initial packet must contain the original problem evidence, not a main-agent reconstruction:
 
@@ -76,12 +76,12 @@ verbatim original statement, title/URL, and exact I/O or protocol format
 official constraints, samples, configs, visualizer, scorer, and public rules
 original instance data or generator and official runner artifacts
 target C++ standard, compiler, flags, and available libraries
-only verified filesystem, process, resource, and submission-interface facts
+only necessary verified filesystem, process, resource, and submission-interface facts
 ```
 
 Do not replace the original statement or official files with a summary. Initially withhold solver source, candidate identity, solver-derived formulas, attempted-method labels, main-agent reasoning, diagnoses, expected outcomes, claimed scores, and results that lack raw evaluator evidence. A main-agent statement is not a verified fact merely because it is confident or repeated.
 
-Require the evaluator sub-agent to freeze a written contract, source artifact, and initial hand-computed/adversarial fixtures before exposing raw candidate outputs, transcripts, or raw official verdict/score responses. Reveal those later artifacts only when needed for differential validation, with their provenance intact and without the main agent's interpretation. Expose solver internals only after an independently reproduced discrepancy proves they are necessary.
+Require the evaluator sub-agent to freeze a written contract, evaluator artifact, and initial hand-computed/adversarial fixtures before exposing raw candidate outputs, transcripts, or raw official verdict/score responses. Reveal those later artifacts only when needed for differential validation, with their provenance intact and without the main agent's interpretation. Expose solver internals only after an independently reproduced discrepancy proves they are necessary.
 
 Without delegation, preserve the same information barrier in a sealed pass with separate files, representations, derivations, and fixtures. Do not inspect solver formulas while deriving evaluator formulas. Solver-generated fixtures or agreement between two code paths copied from the same derivation are not independent evidence.
 
@@ -90,8 +90,8 @@ Strongly prefer C++ for every new checker, scorer, interactor, simulator, and pr
 Return executable artifacts rather than only pseudocode:
 
 ```text
-source paths and component roles
-exact build and run commands
+evaluator source/executable paths, content hashes, and component roles
+exact run command and, when source exists, build command
 small valid, invalid, boundary, and transcript fixtures
 VALID/INVALID or protocol verdict with the first actionable failure
 raw objective and direction
@@ -195,7 +195,7 @@ When possible, implement the tiny brute oracle or objective calculator with a di
 
 ## 8. Integrate the local loop
 
-Compile the evaluator and exercise its command-line or process contract before relying on it. For each challenger, run:
+Build the evaluator when source exists, then exercise its command-line or process contract before relying on it. For each challenger, run:
 
 ```text
 solver -> independent evaluator -> first failure or raw objective delta
@@ -213,12 +213,13 @@ If local and official results disagree, stop solver tuning. Minimize the discrep
 For the mandatory post-first-candidate gate, record completion only after all applicable items are present and actually run:
 
 ```text
-independent owner or documented sealed-pass fallback
+independent evaluator-builder not reused as solver/challenger/reviewer, or documented sealed-pass fallback
 verbatim original problem packet and evaluator contract
-evaluator source plus exact build/run command
+evaluator artifact path/hash and exact run command
+source/build command when source exists; harness source/build command when required
 hand-computed, malformed, boundary, mutation, and tiny-oracle fixtures
 real-pipe transcript tests for interactive tasks
-legality and raw-objective recomputation for scored heuristic tasks
+legality and raw-objective recomputation for scored heuristic/optimization tasks
 official/local comparison where an official artifact or result exists
 remaining unknown score transforms or protocol assumptions
 ```

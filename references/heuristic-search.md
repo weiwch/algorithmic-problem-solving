@@ -94,6 +94,17 @@ candidate move, affected set, delta, rollback log
 primary structure, inverse indices, local contributions, constraint counts
 ```
 
+### Explicit structure and destroy-and-repair
+
+When legality or score depends on a path, cycle, component, schedule, or other global object, keep that object as primary state instead of only low-level variables. Use one atomic compound move:
+
+```text
+destroy a bounded substructure -> repair under fixed boundary constraints ->
+validate the complete structure -> commit, otherwise exact rollback
+```
+
+For a path or cycle, for example, remove one bounded subpath and reconnect its preserved endpoints with a bounded search. This crosses coordinated barriers without forcing the optimizer through illegal or low-score scalar intermediate states. Bound repair cost and retain an exact rollback record.
+
 Remove equivalent states using canonical labels, fixed representatives, sorted interchangeable groups, symmetry-breaking directions, or hashes. Confirm that canonicalization preserves objective and reachability.
 
 ## 4. Fallback and construction

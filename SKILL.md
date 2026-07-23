@@ -1,25 +1,26 @@
 ---
 name: algorithmic-problem-solving
 description: >-
-  Recover or improve an algorithmic solution when its strongest first attempt
-  lacks a verified full pass or maximum score. MANDATORY TRIGGERS: MUST invoke
-  and read this skill (1) immediately after 3 submissions without a
-  full pass or maximum score, even at a high score, and (2) before accepting or
-  presenting any non-full final candidate or final judged result. Skip only
-  after a verified full pass or full score. For non-full interactive or scored
-  heuristic/optimization tasks, including AHC, after the first candidate MUST
-  build and test an independent local interactor/checker/scorer before tuning,
-  Plateau Escape, or delivery; prefer a fresh-context evaluator sub-agent given
-  the original statement and minimal solver reasoning. Use for WA (Wrong
-  Answer), TLE/MLE, crashes, counterexamples, invalid output, evaluator
-  disagreement, score gaps, stalled heuristics, or interactive/reactive
-  failures. DO NOT invoke before the first focused end-to-end attempt on a fresh
-  or straightforward problem.
+  Recover solutions after a focused attempt lacks a verified full pass or
+  maximum score. MUST invoke and read this skill (1) after 2 non-full
+  submissions, even if high-scoring; (2) after the first non-full candidate for
+  any interactive or scored heuristic/optimization task, including AHC; and (3)
+  before any non-full final delivery. Skip only after verified full pass/full
+  score. For (2), MUST establish and test an independent local
+  interactor/checker/scorer before tuning, submission, Plateau Escape, or
+  delivery. If it is missing or insufficient and delegation exists, MUST assign
+  implementation to a separate fresh-context evaluator sub-agent; for a
+  faithful official evaluator, assign independent validation and harness
+  ownership instead. Give that owner verbatim originals, not solver reasoning
+  or unverified results. Also use for WA, TLE/MLE, crashes, invalid output,
+  evaluator disagreement, score gaps, stalled heuristics, or
+  interactive/reactive failures. Do not use before a fresh problem's first
+  focused attempt.
 ---
 
 # Algorithmic Problem-Solving Recovery
 
-Diagnose the failed layer, preserve verified work, and make the smallest evidence-backed change that can recover a complete or materially stronger solution.
+Diagnose the failed layer and preserve verified work. Outside Plateau Escape, make the smallest evidence-backed change that can recover a complete or materially stronger solution. Once Plateau Escape is routed, exempt structural work from the smallest-change preference and maximize evidence-weighted expected terminal official score.
 
 ## Positioning
 
@@ -59,15 +60,15 @@ Read every supplied artifact that is directly relevant to the failing layer. Res
 | Contract meaning, state, invariant, recurrence, reduction, or proof is questionable, or brute force finds a mismatch | Problem model and correctness | [model and route algorithms: model repair](sub-skills/model-and-route-algorithms/SKILL.md#1-normalize-the-operational-contract) |
 | The model is trusted, but the exact/constructive/hybrid/heuristic boundary is unclear under the real bounds | Feasibility and route choice | [model and route algorithms: feasibility](sub-skills/model-and-route-algorithms/SKILL.md#5-establish-the-operation-and-memory-envelope) |
 | The route is known, but its complexity class, algorithm-family premise, or abstract data-structure choice is wrong | Algorithm selection | [technique selection](references/technique-selection.md) |
-| The official evaluator is absent or doubtful; zero/invalid feedback is unexplained; local and remote results disagree; legality, objective, score, simulator, or episode replay needs independent reconstruction; or the mandatory post-first-candidate evaluator gate is incomplete for an interactive or scored heuristic task | Evaluator contract and independent oracle | [checker and local evaluation](sub-skills/checker-and-local-evaluation/SKILL.md) |
+| The official evaluator is absent or doubtful; zero/invalid feedback is unexplained; local and remote results disagree; legality, objective, score, simulator, or episode replay needs independent reconstruction; or the mandatory post-first-candidate evaluator gate is incomplete for an interactive or scored heuristic/optimization task | Evaluator contract and independent oracle | [checker and local evaluation](sub-skills/checker-and-local-evaluation/SKILL.md) |
 | The evaluator is trusted, but oracle choice or counterexample search is unclear, comparisons are noisy, or a challenger needs paired, holdout, metamorphic, or other independent evidence before promotion | Experiment design and promotion evidence | [validation and experiments](sub-skills/validation-and-experiments/SKILL.md) |
 | The route is justified, but compilation, crash/UB, overflow, memory layout, TLE/MLE, buffering, solver-side serialization, randomness, deadline handling, or an implemented data-structure invariant fails | Implementation and environment | [contest solver engineering](sub-skills/contest-solver-engineering/SKILL.md) |
-| A legal scored solver has weak construction, moves, deltas, reachability, or optimizer behavior | Search mechanics | [heuristic search](references/heuristic-search.md) |
+| Any non-full AHC or other scored heuristic/optimization task has a legal candidate, whether offline or online; or its construction, representation, moves, deltas, reachability, evaluation, or optimizer behavior is weak | Mandatory scored-search baseline and search mechanics | [heuristic search](references/heuristic-search.md) |
 | A verified legal scored champion has stopped improving or remains severely below the meaningful score target | Structural quality escalation | [scored-recovery escalation](#escalate-weak-scored-recovery) |
 | The main value of an action is to obtain information and shrink hidden hypotheses | Protocol, query design, inference, adversarial feedback | [interactive problem solving](sub-skills/interactive-problem-solving/SKILL.md) |
-| A reward-bearing decision occurs in a live sequential process and its feedback changes later choices | Estimation, planning, exploration, sequential feedback | [reactive online decision problem solving](sub-skills/reactive-online-decision-problem-solving/SKILL.md) |
+| A reward-bearing decision occurs in a live sequential process and new observations or feedback can change later choices | Estimation, planning, exploration, sequential feedback | [reactive online decision problem solving](sub-skills/reactive-online-decision-problem-solving/SKILL.md); for AHC or another scored heuristic task, pair it with [heuristic search](references/heuristic-search.md) |
 
-Read only the routed document or sub-skill before acting. A symptom may move to another row after one falsifying test; update the diagnosis instead of stacking unrelated fixes.
+Choose the primary failing-layer route, but treat mandatory and paired routes as additive rather than exclusive. Read every document named by the selected route before acting. In particular, a non-full AHC always adds Heuristic Search, and a live reward-bearing AHC adds Reactive without replacing Heuristic Search. Resolve an upstream contract, evaluator, legality, or implementation contradiction before tuning through a downstream route. A symptom may move to another row after one falsifying test; update the diagnosis instead of stacking unrelated fixes.
 
 Model and Route Algorithms has two internal entry points: begin with model repair when correctness evidence is unresolved, and enter at its feasibility envelope only when the model and proof obligations are already trusted.
 
@@ -87,14 +88,39 @@ Complete the gate only when an independent local artifact is executable under th
 interactive       real-pipe interactor/simulator, transcript, limits, and termination
 heuristic/scored  legality checker plus independently recomputed raw objective
 score reporting   official aggregation/normalization only when actually established
-handoff           source paths, exact build/run commands, fixtures, and unresolved gaps
+handoff           evaluator artifact path/hash, exact run and applicable build commands, fixtures, and unresolved gaps
 ```
 
 Use an official local evaluator when supplied, but still exercise its process contract and validate it against hand-computed, boundary, malformed, and mutation fixtures. When no faithful local evaluator is supplied, implement one; an official score alone is not a substitute for a reproducible local oracle.
 
-When delegation is available, assign evaluator implementation to a dedicated fresh-context sub-agent that did not author the solver or challenger. Give it the verbatim original statement and official original artifacts first, plus only necessary verified toolchain and access facts. Withhold solver internals, solver-derived formulas, main-agent diagnoses, method preferences, estimated scores, and unverified summaries until the evaluator has frozen its contract and initial fixtures. Only then reveal raw candidate outputs, transcripts, or raw official responses needed for differential validation. If delegation is unavailable, perform a sealed independent pass with separate files, representations, and derivations. Solver-generated fixtures alone never complete the gate.
+When delegation is available, MUST assign evaluator ownership to a dedicated fresh-context sub-agent that did not author the solver or challenger; do not reuse it as a challenger owner, trajectory critic, method researcher, or other method reviewer for the same task. Treat this as implementation or validation ownership, not an optional review. If the required evaluator is missing or insufficient, that sub-agent MUST implement and validate the missing artifact. If a faithful official evaluator already exists, it instead owns independent contract recovery, adversarial fixtures, validation, and any required runner or harness; do not rewrite official source merely to manufacture ownership separation. Require the evaluator owner to read and execute [Checker and Local Evaluation](sub-skills/checker-and-local-evaluation/SKILL.md) in full before working.
 
-For these task classes, Plateau Escape owns completing any missing evaluator artifact before its reviewers evaluate structural challengers. It may not defer the implementation as advice or proceed using a solver-authored acceptance test.
+Give the evaluator owner the verbatim original statement and official original artifacts first, plus only necessary verified toolchain and access facts. Withhold solver internals, solver-derived formulas, main-agent diagnoses, method preferences, estimated scores, and unverified summaries until it has frozen the evaluator contract and initial fixtures. Only then reveal raw candidate outputs, transcripts, or raw official responses needed for differential validation. If delegation is unavailable, perform a sealed independent pass with separate files, representations, derivations, and fixtures. Solver-generated fixtures alone never complete the gate.
+
+For these task classes, Plateau Escape MUST implement and validate any missing evaluator artifact under Checker and Local Evaluation before its reviewers evaluate structural challengers. It may not defer the implementation as advice or proceed using a solver-authored acceptance test.
+
+## Additive AHC routing
+
+After the mandatory local-evaluator gate is satisfied, every non-full AHC or equivalent scored heuristic/optimization task MUST read Heuristic Search before further optimization, another submission, Plateau Escape, or final delivery. If live observations or feedback can change later reward-bearing actions during the same judged execution, it MUST additionally read Reactive Online Decision Problem Solving. These requirements are additive; choosing a primary failing layer does not waive either one.
+
+Apply the routes as follows:
+
+```text
+offline, complete input, one final output
+  -> Heuristic Search
+
+live observations/feedback change later reward-bearing actions
+  -> Reactive Online Decision Problem Solving
+  -> Heuristic Search
+
+separable query stage primarily reduces hidden hypotheses
+  -> Interactive Problem Solving for that stage
+  -> keep the applicable Heuristic and/or Reactive route for score-bearing actions
+```
+
+Heuristic Search is the mandatory AHC baseline. It owns representation, construction, neighborhoods, rollout/search mechanics, incremental evaluation, reachability, optimizer choice, and time allocation. For a live online AHC, Reactive owns the outer observable/latent state, estimator, planner, explorer, feedback update, horizon, and risk policy; then read Heuristic Search for the concrete action-generation or inner-search machinery. Do not let either document substitute for the other.
+
+Do not add Reactive merely because the output encodes a long action sequence or compact policy, the scorer simulates turns or randomness after receiving a fixed output, or development repeatedly calls a local/remote evaluator. If the submitted program cannot observe an outcome and adapt its next action during the same judged execution, keep the task on the offline Heuristic route. Once a non-full AHC candidate or judged result exists, its AHC label mandates Heuristic Search, but does not mandate Reactive by itself.
 
 ## Distinguish Interactive from Reactive
 
@@ -106,7 +132,7 @@ Interactive: understand protocol -> choose query -> update hypotheses -> recover
 Reactive:    observe -> estimate -> choose a legal action -> receive reward -> update policy until the horizon/task/budget ends
 ```
 
-If an action primarily eliminates candidate hidden states, route to Interactive. If it must earn reward while learning from live feedback that changes later decisions in the same run or environment, route the overall policy to Reactive and use Interactive only for a separable identification subproblem. Route an offline output-only or scorer-only optimization task to [heuristic search](references/heuristic-search.md), even when development repeatedly evaluates candidates. An AHC label alone does not decide the route: use Reactive only for a reward-bearing sequential layer with live feedback.
+If an action primarily eliminates candidate hidden states, route that stage to Interactive. If it must earn reward while learning from live feedback that changes later decisions in the same run or environment, route the overall policy to Reactive. For any AHC or scored heuristic task, keep Heuristic Search as the additive search-mechanics route in either case. A precommitted action sequence, an offline policy artifact, simulated turns after fixed output, stochastic execution without observable feedback, and repeated evaluation across development runs do not make a task Reactive.
 
 ## Evidence-driven recovery loop
 
@@ -135,11 +161,13 @@ When escalation applies, preserve the champion and run Plateau Escape's two fres
 
 Treat sub-agent work as an executable evidence track, not optional advice:
 
-- When remote submission is authorized and budget remains, delegate an explicit quota and reserve at least one submission for the method researcher. The sub-agent may implement, evaluate, and submit its isolated challenger within that quota without per-submission main-agent approval, then wait for and return the terminal official final score and raw result. If only the main agent can access the transport, relay the exact sub-agent artifact unchanged.
-- Give the method researcher's primary eligible structural method its protected implementation/evaluation slot before new same-family tuning. Every leading proposal must end as evaluated, queued for a named test, or rejected with a proof, primary contract citation, failing artifact, or measurement that matches Plateau Escape's rejection gate.
+- When remote submission is authorized and budget remains, delegate an explicit quota and reserve at least one submission for the method researcher; when the budget permits, also allocate a separate multi-submission iteration quota to each selected rank-1 critic/research track. Prioritize those iterations over easier lower-ranked methods or retaining unused budget for the main agent. Both reviewers should implement, evaluate, improve, and submit their own isolated challengers instead of returning them for subjective main-agent screening. If only the main agent can access the transport, relay each exact sub-agent artifact unchanged and return the raw result for every iteration.
+- Encourage both roles to explore aggressively across high-upside representations, objectives, decompositions, neighborhoods, planning horizons, relaxations, and algorithm families, including methods that require a substantial rewrite. Aggressive exploration never waives legality, evaluator fidelity, final judge limits, or submission authorization.
+- Require both roles to freeze rankings by the evidence-weighted expected terminal final official aggregate score achievable under the verified remaining hard time, compute, and submission budget. Implementation difficulty, code size, rewrite scope, familiarity, prototype speed, or ability to finish within one sub-agent turn is not a ranking criterion. A turn boundary is not a hard scope limit: continue the same isolated rank-1 owner through follow-up tasks when supported. Task each role to implement its rank-1 applicable method, start with that method's smallest faithful structural prototype, and iteratively repair and improve it through the delegated evaluation/submission quota; `smallest` scopes the first experiment, not the method choice.
+- Process both frozen rankings in order. Do not select a lower-ranked method until every higher-ranked method has Plateau Escape's required recorded elimination evidence. Every leading proposal must end as iteratively evaluated, queued for a named test, or rejected with a proof, primary contract citation, failing artifact, or measurement that matches Plateau Escape's rejection gate.
 - The main agent may not use `risk too high`, unfamiliarity, code size, restructuring cost, or an unmeasured estimate as a veto. Under the same established final evaluator, a legal challenger with a better exact terminal final score and passing hard constraints is promoted mechanically; opinion cannot override that result.
 
-Do not stop after collecting reports, defer all experiments back to the main agent, or resume scalar tuning before the protected structural trial has a terminal result or concrete rejection evidence.
+Do not stop after collecting reports, defer all experiments back to the main agent, or resume scalar tuning before each selected rank-1 structural track reaches Plateau Escape's iteration stop condition or concrete rejection evidence.
 
 ## Guardrails
 
@@ -156,7 +184,7 @@ Do not stop after collecting reports, defer all experiments back to the main age
 
 Rebuild the selected champion cleanly and rerun the focused regression, final serialization or transcript validation, and representative resource probe. For tasks outside the mandatory gate, rerun an independent oracle/checker where practical. For every interactive or scored heuristic/optimization task in the gate, rerun the independent local evaluator and report its exact command and result. Deliver the champion rather than the latest edit.
 
-Before accepting any scored result below 70% of a meaningful official maximum or explicit target, read and execute Plateau Escape. Use its fresh-context sub-agents with role-specific evidence packets, let the method researcher complete its protected challenger through authorized terminal evaluation, and apply the evidence-bound promotion or rejection rule; do not finish with only advice, an unevaluated recommendation, a subjective main-agent veto, or another round of minor parameter tuning.
+Before accepting any scored result below 70% of a meaningful official maximum or explicit target, read and execute Plateau Escape. Use its fresh-context sub-agents with role-specific evidence packets, let every selected rank-1 critic/research track complete its authorized iteration loop and stop condition, and apply the evidence-bound promotion or rejection rule; do not finish with only advice, an unevaluated recommendation, a subjective main-agent veto, or another round of minor parameter tuning.
 
 Report only:
 
@@ -164,6 +192,6 @@ Report only:
 root cause and decisive evidence
 implemented correction or promoted challenger
 commands/tests actually run and their results
-sub-agent submission id and exact final score when applicable
+sub-agent submission ids, per-iteration scores, and terminal score when applicable
 remaining assumptions or material risk
 ```
