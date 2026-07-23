@@ -1,6 +1,27 @@
-# Lightweight Validation and Iteration
+---
+name: validation-and-experiments
+description: >-
+  Design the smallest falsifying test loop for an algorithmic solver, including
+  brute oracles, differential and metamorphic tests, champion/challenger
+  comparisons, paired seeds, holdouts, resource probes, and release gates. Use
+  as an internal algorithmic-problem-solving recovery route when the smallest
+  counterexample is unclear, comparisons are noisy, or a correction needs
+  independent evidence before promotion. Do not use to implement a doubtful
+  checker or to diagnose a known compiler or runtime-engineering failure.
+---
 
-Use the smallest test loop that can falsify the current algorithmic hypothesis. Do not begin with a generic benchmark platform.
+# Validation and Experiments
+
+Use the smallest test loop that can falsify the current algorithmic hypothesis. Do not begin with a generic benchmark platform or a large campaign.
+
+## Ownership and handoffs
+
+This skill owns oracle choice, counterexample search, controlled candidate comparison, stochastic evidence, and promotion/release gates. Use:
+
+- [checker and local evaluation](../checker-and-local-evaluation/SKILL.md) to implement or repair an independent checker, scorer, interactor, simulator, or process harness;
+- [model and route algorithms](../model-and-route-algorithms/SKILL.md) when evidence contradicts the contract, state, reduction, proof, or route class;
+- [contest solver engineering](../contest-solver-engineering/SKILL.md) for compiler, overflow, memory-layout, I/O, or measured deadline failures;
+- the shared [heuristic search](../../references/heuristic-search.md) for representation, moves, deltas, reachability, and optimizer mechanics.
 
 ## 1. Validation ladder
 
@@ -32,6 +53,8 @@ Check:
 
 For constructive output, validate syntax, hard constraints, and final serialization independently. A promised-feasible input does not prove the construction reaches a valid witness.
 
+When a mismatch appears, minimize it and identify the first violated model or proof premise before changing downstream implementation details.
+
 ## 3. Scored solvers
 
 Always keep:
@@ -51,7 +74,7 @@ Before tuning quality:
 - confirm score direction and any clamp, threshold, or normalization;
 - verify the internal deadline includes a safety margin.
 
-Read [checker-and-local-evaluation.md](checker-and-local-evaluation.md) when the official checker/scorer is absent or doubtful.
+Use Checker and Local Evaluation when the official checker/scorer is absent or doubtful. Do not compare solver quality under an evaluator whose contract is still contradicted by official or hand-computed evidence.
 
 ## 4. Minimal champion/challenger loop
 
@@ -96,7 +119,13 @@ When an exact oracle is hard, transform an instance in a way with a known effect
 
 Verify the expected relationship, not necessarily a fixed output string.
 
-## 7. When heavier evidence is justified
+## 7. Interactive and reactive evaluator validation
+
+Use Checker and Local Evaluation to build and self-test a process-level simulator, interactor, reactive episode replayer, scorer, real-pipe runner, and transcript contract. That sub-skill owns evaluator implementation, the C++ implementation policy, adversarial fixtures, and the route to concrete `testlib.h` APIs.
+
+This skill owns how those evaluator artifacts enter the broader experiment loop. Pin their build/run commands and evaluator version, compare policies or strategies on the same allowed hidden states and noise seeds, retain failing transcripts, and report protocol failure separately from legality, reward, runtime, and strategy quality. Do not promote a solver merely because it performs well under one uncorroborated local simulator.
+
+## 8. When heavier evidence is justified
 
 Use larger seed sets, quantiles, confidence intervals, or formal benchmark automation only when:
 
@@ -108,23 +137,21 @@ Use larger seed sets, quantiles, confidence intervals, or formal benchmark autom
 
 Even then, begin with paired per-case deltas and explicit invalid/timeout counts. Do not let statistical machinery hide contract or checker errors.
 
-## 8. Failure-directed next action
+## 9. Failure-directed next action
 
-Map evidence to the next layer:
-
-| Symptom | Next check |
+| Symptom | Next route or check |
 |---|---|
-| Invalid output | parser, bounds, reconstruction, checker assumptions |
-| Exact mismatch | smallest brute counterexample and proof assumption |
-| TLE/MLE | measured hot path, state count, copying, allocation |
-| Legal but very low score | objective direction, external reference/bound gap, representation, construction |
-| Local search plateau | delta correctness, reachability, compound moves |
-| Seed-sensitive gain | per-instance deltas, outliers, overfit |
-| Local/remote disagreement | checker contract and score transform |
+| Invalid output | Parser, bounds, reconstruction, checker assumptions |
+| Exact mismatch | Model-and-route: smallest brute counterexample and proof premise |
+| TLE/MLE | Contest-solver-engineering: measured hot path, state count, copying, allocation |
+| Legal but very low score | Objective direction, external reference/bound gap, representation, construction |
+| Local search plateau | Delta correctness, reachability, compound moves |
+| Seed-sensitive gain | Per-instance deltas, outliers, overfit |
+| Local/remote disagreement | Checker contract and score transform |
 
-If the current route appears structurally weak but the plateau criteria are not yet met, test one falsifiable structural challenger. Once the criteria are met, return to [the mandatory fresh-context plateau escape](../SKILL.md#mandatory-fresh-context-plateau-escape) before choosing another model, representation, or algorithm family. Do not answer every failure with another parameter or bypass the plateau gate by expanding the test campaign.
+If the current route appears structurally weak but the admission criteria in [plateau escape](../plateau-escape/SKILL.md) are not yet met, test one falsifiable structural challenger. Once they are met, use that sub-skill before choosing another model, representation, or algorithm family. Do not answer every failure with another parameter or bypass the plateau gate by expanding the test campaign.
 
-## 9. Release gate
+## 10. Release gate
 
 Before delivery:
 
@@ -135,3 +162,5 @@ Before delivery:
 - probe worst or representative runtime and memory;
 - confirm deterministic seeds and release flags;
 - ensure the delivered artifact is the champion, not the latest edit.
+
+Return the falsified or supported hypothesis, exact commands and fixtures used, per-case evidence, promotion/rejection decision, and remaining material uncertainty.

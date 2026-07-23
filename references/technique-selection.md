@@ -1,10 +1,24 @@
 # Algorithm Technique Selection
 
-Use this catalog after formalization. It supplies routing questions and failure conditions, not copy-paste code. Generate only the implementation the problem needs, then compile and test it; static template libraries often contain hidden convention, overflow, memory, or boundary assumptions.
+Use this catalog after the problem model is trusted and [model and route algorithms](../sub-skills/model-and-route-algorithms/SKILL.md#5-establish-the-operation-and-memory-envelope) has narrowed the admissible solution classes. It supplies algorithm-family questions and rejection conditions, not copy-paste code. Generate only the implementation the problem needs, then compile and test it; static template libraries often contain hidden convention, overflow, memory, or boundary assumptions.
 
 ## Plateau gate
 
-If this technique-selection failure occurs after the plateau criteria in `SKILL.md` are met, do not choose another method family from this catalog yet. First complete [the mandatory fresh-context plateau escape](../SKILL.md#mandatory-fresh-context-plateau-escape), then use this catalog to compare the returned routes. Before a plateau, use the failed complexity, proof, or brute-test evidence to narrow candidates; loading this file alone does not justify literature research.
+If this technique-selection failure occurs after the admission criteria for [plateau escape](../sub-skills/plateau-escape/SKILL.md) are met, do not choose another method family from this catalog yet. Complete that structural review, then use this catalog to compare the returned routes. Before a plateau, use the failed complexity, proof, or brute-test evidence to narrow candidates.
+
+## Family-level routing
+
+Test only families admitted by the contract and feasibility record, stopping when a clean fit is established:
+
+1. **Direct structure:** sorting, counting, prefix/suffix summaries, two pointers, monotonicity, greedy exchange, sweep, or binary search on the answer.
+2. **Graph formulation:** connectivity, shortest path, DAG order, SCC, MST, matching, flow/cut, 2-SAT, or difference constraints.
+3. **Dynamic programming:** minimal sufficient state, ordering, transition locality, rolling memory, bitset acceleration, and safe dominance.
+4. **Algebra, geometry, or strings:** exploit the exact mathematical structure rather than discretizing or searching blindly.
+5. **Decomposition:** independent components, separators, treewidth, centroid or block structure, coordinate compression, or offline ordering.
+6. **Bounded exponential:** subset DP, meet-in-the-middle, branch-and-bound, iterative deepening, memoized search, or inclusion-exclusion.
+7. **General solver:** SAT/SMT, CP-SAT, ILP/MIP, or convex optimization when the environment and model size support it.
+
+Do not infer hardness from a large raw search space or select a sophisticated structure from surface vocabulary. Verify every family-specific precondition against the trusted model and feasibility envelope.
 
 ## Fundamental transforms
 
@@ -73,7 +87,7 @@ Prefer deterministic algorithms when equality must be certain. If hashing is use
 | 64-bit primality/factorization | Deterministic 64-bit Miller-Rabin, Pollard rho/Brent | Use a proven uint64 witness set and `__int128`; retry/cycle handling |
 | Congruence system | CRT/generalized CRT | Non-coprime consistency and product overflow |
 | Polynomial convolution | NTT/FFT | Modulus/root limits, padding, signed recovery, floating error |
-| Binomial modulo prime | Factorials/inverses, Lucas when digits in base `p` are small | Composite modulus needs a different method |
+| Binomial modulo prime | Factorials/inverses; Lucas for prime `p` when each base-`p` digit binomial is computable within budget, often because `p` is small enough for factorial tables | Composite modulus needs a different method; `O(p)` tables may be too large |
 
 Do not trust remembered primality witness bounds or root constants without a known source and targeted tests.
 

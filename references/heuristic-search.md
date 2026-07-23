@@ -1,8 +1,8 @@
 # Quantified Heuristic Search
 
-Use this reference for score-based construction, approximation, local search, and hybrid exact/heuristic solvers after the exact-feasibility gate. The central question is not which metaheuristic sounds sophisticated. It is whether the representation, moves, evaluation, and useful-event count form an informative reachable process within the time limit.
+Use this reference when a legal scored attempt has exposed a concrete weakness in construction, representation, moves, evaluation, or optimizer behavior. The central question is not which metaheuristic sounds sophisticated. It is whether the representation, moves, evaluation, and useful-event count form an informative reachable process within the time limit.
 
-If the evidence already meets the plateau criteria in `SKILL.md`, complete [the mandatory fresh-context plateau escape](../SKILL.md#mandatory-fresh-context-plateau-escape) before selecting another representation, optimizer, or method family. Use this reference to test the returned hypotheses, not to bypass that gate.
+If the evidence already meets the admission criteria for [plateau escape](../sub-skills/plateau-escape/SKILL.md), stop scalar tuning and use that sub-skill before selecting another representation or method family. Use this reference for concrete search mechanics and for testing the structural hypotheses returned by the plateau review.
 
 ## 1. Search budget
 
@@ -50,6 +50,8 @@ useful/s      = proposals/s * p_valid * p_accept * p_structural
 gain/s        = proposals/s * p_valid * p_accept
                 * E[max(true_delta, 0) | accepted]
 ```
+
+`gain/s` intentionally does not multiply by `p_structural`: its expectation is over all accepted moves, including zero-gain non-structural moves. If the expectation is estimated only over structural accepted moves, multiply by `p_structural` and condition the expectation on both accepted and structural moves.
 
 Also record representative move cost, delta distribution, distinct-state/hash rate, and best-update time. Interpret low rates causally:
 
