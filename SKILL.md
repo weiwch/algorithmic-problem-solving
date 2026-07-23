@@ -1,17 +1,20 @@
 ---
 name: algorithmic-problem-solving
 description: >-
-  Recover a concrete bounded algorithmic or combinatorial solve after the agent
-  has already independently designed, implemented, and tested the strongest
-  plausible complete solution and that focused end-to-end attempt failed. Use
-  for unresolved WA, TLE, MLE, crashes, proof or brute-force counterexamples,
-  invalid output, checker/scorer disagreement, unexplained zero or low score,
-  stalled heuristic search, interactive protocol or hidden-state inference
-  failure, weak reactive/online decisions, or a contest template that fails its
-  stated operations and bounds. Do not invoke for a fresh or straightforward
-  problem that the model can solve directly: first aim to write the expected
-  fully correct, complete, or realistically near-optimal solution without this
-  recovery workflow.
+  Recover or improve an algorithmic solution when its strongest first attempt
+  lacks a verified full pass or maximum score. MANDATORY TRIGGERS: MUST invoke
+  and read this skill (1) immediately after 3 submissions without a
+  full pass or maximum score, even at a high score, and (2) before accepting or
+  presenting any non-full final candidate or final judged result. Skip only
+  after a verified full pass or full score. For non-full interactive or scored
+  heuristic/optimization tasks, including AHC, after the first candidate MUST
+  build and test an independent local interactor/checker/scorer before tuning,
+  Plateau Escape, or delivery; prefer a fresh-context evaluator sub-agent given
+  the original statement and minimal solver reasoning. Use for WA (Wrong
+  Answer), TLE/MLE, crashes, counterexamples, invalid output, evaluator
+  disagreement, score gaps, stalled heuristics, or interactive/reactive
+  failures. DO NOT invoke before the first focused end-to-end attempt on a fresh
+  or straightforward problem.
 ---
 
 # Algorithmic Problem-Solving Recovery
@@ -20,7 +23,7 @@ Diagnose the failed layer, preserve verified work, and make the smallest evidenc
 
 ## Positioning
 
-This is a recovery router, not the default way to solve every contest problem. The focused end-to-end solve is an activation prerequisite and happens outside this skill. If no concrete failure evidence exists, leave this workflow and solve the problem directly.
+This is a recovery router, not the default way to solve every contest problem. The focused end-to-end solve is an activation prerequisite and happens outside this skill. If no concrete failure evidence exists, leave this workflow and solve the problem directly. The mandatory post-first-candidate local-evaluator gate below is the exception: interactive and scored heuristic/optimization tasks enter that gate even before a specific failure is known.
 
 Once activated, do not restart reflexively. Reconstruct the actual contract and the failed attempt from artifacts, then reuse every verified component that is not implicated by evidence.
 
@@ -56,7 +59,7 @@ Read every supplied artifact that is directly relevant to the failing layer. Res
 | Contract meaning, state, invariant, recurrence, reduction, or proof is questionable, or brute force finds a mismatch | Problem model and correctness | [model and route algorithms: model repair](sub-skills/model-and-route-algorithms/SKILL.md#1-normalize-the-operational-contract) |
 | The model is trusted, but the exact/constructive/hybrid/heuristic boundary is unclear under the real bounds | Feasibility and route choice | [model and route algorithms: feasibility](sub-skills/model-and-route-algorithms/SKILL.md#5-establish-the-operation-and-memory-envelope) |
 | The route is known, but its complexity class, algorithm-family premise, or abstract data-structure choice is wrong | Algorithm selection | [technique selection](references/technique-selection.md) |
-| The official evaluator is absent or doubtful; zero/invalid feedback is unexplained; local and remote results disagree; or legality, objective, score, simulator, or episode replay needs independent reconstruction | Evaluator contract and independent oracle | [checker and local evaluation](sub-skills/checker-and-local-evaluation/SKILL.md) |
+| The official evaluator is absent or doubtful; zero/invalid feedback is unexplained; local and remote results disagree; legality, objective, score, simulator, or episode replay needs independent reconstruction; or the mandatory post-first-candidate evaluator gate is incomplete for an interactive or scored heuristic task | Evaluator contract and independent oracle | [checker and local evaluation](sub-skills/checker-and-local-evaluation/SKILL.md) |
 | The evaluator is trusted, but oracle choice or counterexample search is unclear, comparisons are noisy, or a challenger needs paired, holdout, metamorphic, or other independent evidence before promotion | Experiment design and promotion evidence | [validation and experiments](sub-skills/validation-and-experiments/SKILL.md) |
 | The route is justified, but compilation, crash/UB, overflow, memory layout, TLE/MLE, buffering, solver-side serialization, randomness, deadline handling, or an implemented data-structure invariant fails | Implementation and environment | [contest solver engineering](sub-skills/contest-solver-engineering/SKILL.md) |
 | A legal scored solver has weak construction, moves, deltas, reachability, or optimizer behavior | Search mechanics | [heuristic search](references/heuristic-search.md) |
@@ -73,6 +76,25 @@ Technique Selection owns whether a data structure or algorithm family matches th
 Use the recovery loop below for a correction with a known deterministic failing test and an obvious focused regression. Route to Validation and Experiments when choosing or constructing the evidence is itself material, stochastic variance can reverse promotion, or independent promotion/release evidence is still missing.
 
 The checker/local-evaluation sub-skill owns evaluator architecture, independent implementation, and adversarial validation of the evaluator itself. For concrete evaluator code based on `testlib.h`, pair it with [testlib C++ judging](sub-skills/testlib-cpp-judging/SKILL.md).
+
+## Mandatory local-evaluator gate
+
+Apply this gate after the first focused end-to-end candidate to every interactive task and every scored heuristic or optimization task, including AHC, unless terminal official evidence already verifies a full pass or full score. Regardless of whether its policy route is Interactive, Reactive, or Heuristic Search, read and execute [Checker and Local Evaluation](sub-skills/checker-and-local-evaluation/SKILL.md) before further tuning, challenger promotion, remote submission, Plateau Escape, or final delivery. A high score, plausible transcript, or apparently valid sample does not waive the gate.
+
+Complete the gate only when an independent local artifact is executable under the target toolchain and has passed its own adversarial fixtures:
+
+```text
+interactive       real-pipe interactor/simulator, transcript, limits, and termination
+heuristic/scored  legality checker plus independently recomputed raw objective
+score reporting   official aggregation/normalization only when actually established
+handoff           source paths, exact build/run commands, fixtures, and unresolved gaps
+```
+
+Use an official local evaluator when supplied, but still exercise its process contract and validate it against hand-computed, boundary, malformed, and mutation fixtures. When no faithful local evaluator is supplied, implement one; an official score alone is not a substitute for a reproducible local oracle.
+
+When delegation is available, assign evaluator implementation to a dedicated fresh-context sub-agent that did not author the solver or challenger. Give it the verbatim original statement and official original artifacts first, plus only necessary verified toolchain and access facts. Withhold solver internals, solver-derived formulas, main-agent diagnoses, method preferences, estimated scores, and unverified summaries until the evaluator has frozen its contract and initial fixtures. Only then reveal raw candidate outputs, transcripts, or raw official responses needed for differential validation. If delegation is unavailable, perform a sealed independent pass with separate files, representations, and derivations. Solver-generated fixtures alone never complete the gate.
+
+For these task classes, Plateau Escape owns completing any missing evaluator artifact before its reviewers evaluate structural challengers. It may not defer the implementation as advice or proceed using a solver-authored acceptance test.
 
 ## Distinguish Interactive from Reactive
 
@@ -100,14 +122,14 @@ For exact work, demand a corrected proof obligation and try to falsify it on tin
 
 ## Escalate weak scored recovery
 
-Apply this gate only after the champion is legal under a trusted evaluator and fits the resource budget. Read [Plateau Escape](sub-skills/plateau-escape/SKILL.md) when either signal holds:
+Apply this gate only after the champion is legal under a trusted evaluator and fits the resource budget. For interactive or scored heuristic/optimization tasks, first satisfy the mandatory local-evaluator gate. Read [Plateau Escape](sub-skills/plateau-escape/SKILL.md) when either signal holds:
 
-- **Measured plateau:** at least two materially different legal challengers, or at least five controlled submissions, fail to improve the champion beyond a predeclared threshold above evaluator/seed/runtime noise. Use `1%` of a normalized score scale as the default threshold when such a scale exists.
-- **Severe score gap:** after the focused recovery loop, the best legal champion is still below `50%` of a meaningful official maximum or explicit target.
+- **Measured plateau:** at least two materially different legal challengers, or at least 3 controlled submissions, fail to improve the champion beyond a predeclared threshold above evaluator/seed/runtime noise. Use `1%` of a normalized score scale as the default threshold when such a scale exists.
+- **Severe score gap:** after the focused recovery loop, the best legal champion is still below `70%` of a meaningful official maximum or explicit target.
 
 A controlled comparison uses the same evaluator, comparable budgets, and paired fixed cases/seeds when applicable. A materially different challenger changes the representation, objective or value model, neighborhood reachability, planning horizon, decomposition, relaxation, or algorithm family; changing only a seed, scalar parameter, tie-break, operator percentage, or runtime allocation does not count.
 
-A single low score is not by itself a measured plateau, but the below-half rule is an independent mandatory escalation because the remaining gap is too large to justify stopping at local tuning. After the focused recovery loop, this root-level severe-gap signal satisfies Plateau Escape's admission gate. If the score has no meaningful maximum or explicit target, do not invent a halfway point; use the measured-plateau signal instead. Route invalid or contradictory evaluation to Checker and Local Evaluation, implementation/resource failures to Contest Solver Engineering, unclear comparisons to Validation and Experiments, and ordinary search-mechanics weaknesses to Heuristic Search before escalating.
+A single low score is not by itself a measured plateau, but the below 70% rule is an independent mandatory escalation because the remaining gap is too large to justify stopping at local tuning. After the focused recovery loop, this root-level severe-gap signal satisfies Plateau Escape's admission gate. If the score has no meaningful maximum or explicit target, do not invent a halfway point; use the measured-plateau signal instead. Route invalid or contradictory evaluation to Checker and Local Evaluation, implementation/resource failures to Contest Solver Engineering, unclear comparisons to Validation and Experiments, and ordinary search-mechanics weaknesses to Heuristic Search before escalating.
 
 When escalation applies, preserve the champion and run Plateau Escape's two fresh-context sub-agent roles when delegation is available. Give the trajectory critic the original problem artifacts and verified facts, then the separately labeled attempt log only after it freezes an independent reconstruction. Give the method researcher the complete original problem and only verified necessary contract, budget, target, and evaluation facts; withhold the champion, attempt history, current method labels, diagnoses, risk labels, rejected-method rationales, and the other review until its independent research map is sealed. If delegation is unavailable, perform the two sealed passes and preserve the same information barrier.
 
@@ -132,9 +154,9 @@ Do not stop after collecting reports, defer all experiments back to the main age
 
 ## Finish
 
-Rebuild the selected champion cleanly and rerun the focused regression, independent oracle/checker where practical, final serialization or transcript validation, and representative resource probe. Deliver the champion rather than the latest edit.
+Rebuild the selected champion cleanly and rerun the focused regression, final serialization or transcript validation, and representative resource probe. For tasks outside the mandatory gate, rerun an independent oracle/checker where practical. For every interactive or scored heuristic/optimization task in the gate, rerun the independent local evaluator and report its exact command and result. Deliver the champion rather than the latest edit.
 
-Before accepting any scored result below half of a meaningful official maximum or explicit target, read and execute Plateau Escape. Use its fresh-context sub-agents with role-specific evidence packets, let the method researcher complete its protected challenger through authorized terminal evaluation, and apply the evidence-bound promotion or rejection rule; do not finish with only advice, an unevaluated recommendation, a subjective main-agent veto, or another round of minor parameter tuning.
+Before accepting any scored result below 70% of a meaningful official maximum or explicit target, read and execute Plateau Escape. Use its fresh-context sub-agents with role-specific evidence packets, let the method researcher complete its protected challenger through authorized terminal evaluation, and apply the evidence-bound promotion or rejection rule; do not finish with only advice, an unevaluated recommendation, a subjective main-agent veto, or another round of minor parameter tuning.
 
 Report only:
 

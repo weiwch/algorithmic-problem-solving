@@ -5,9 +5,12 @@ description: >-
   hybrid solver. Use only when a verified legal champion has stalled across
   controlled submissions or materially different challengers and the next
   step requires an independent trajectory audit, method research, a structural
-  alternative, or an evidence-gated prototype. Do not use for one low score,
-  invalid or zero output, checker disagreement, a crash, TLE/MLE, or an
-  interactive protocol failure.
+  alternative, or an evidence-gated prototype. When an interactive or scored
+  heuristic/optimization task, including AHC, is routed here, first implement
+  and validate its mandatory independent local interactor/checker/scorer under
+  checker-and-local-evaluation. Do not use for one low score, invalid or zero
+  output, checker disagreement, a crash, TLE/MLE, or an interactive protocol
+  failure alone.
 ---
 
 # Plateau Escape
@@ -16,7 +19,7 @@ Protect the verified champion, challenge the current problem representation, and
 
 ## Entry contract
 
-Enter only when the root [scored-recovery escalation](../../SKILL.md#escalate-weak-scored-recovery) routes here. Treat that routing decision as authoritative instead of re-deriving plateau thresholds in this sub-skill. The handoff must identify the measured-plateau or severe-score-gap signal and include the trusted-evaluator, champion-legality, resource, and controlled-attempt evidence used by the root; if it does not, return to the root router.
+Enter only when the root [scored-recovery escalation](../../SKILL.md#escalate-weak-scored-recovery) routes here. Treat that routing decision as authoritative instead of re-deriving plateau thresholds in this sub-skill. The handoff must identify the measured-plateau or severe-score-gap signal and include the champion-legality, resource, and controlled-attempt evidence used by the root; if the escalation signal is absent, return to the root router. For an interactive or scored heuristic/optimization task, missing or unvalidated local-evaluator evidence is not a reason to proceed or return only advice: complete the mandatory evaluator gate below first.
 
 ## Freeze the champion and separate facts from conclusions
 
@@ -24,18 +27,21 @@ Do not mutate the champion during diagnosis. Preserve the original problem artif
 
 ```text
 primary problem packet
-  original statement/title/URL and exact I/O
-  constraints, objective, scoring and aggregation rules
+  verbatim original statement content/title/URL and exact I/O or protocol
+  original constraints, objective, scoring and aggregation rules
   official evaluator/configuration, samples, public instances, benchmark or dataset
   target toolchain, resource limits, submission interface and remaining budget
 
 verified fact ledger
   necessary fact | exact derivation/source/command | reproducing artifact
   champion identity, legality, final score/runtime and evaluator evidence
+  local evaluator identity/hash, build/run commands, fixtures and validation evidence
   saved counterexamples, profiles and fixed cases/seeds
 ```
 
 A derived fact is admissible only when it follows from a checked proof, an official primary artifact, or a reproducible command or test whose artifact is included. Keep prior diagnoses, method preferences, estimated upside, risk labels, and reported results without raw evidence out of the fact ledger. Preserve an unresolved discrepancy as a question with its primary artifacts; never silently turn one interpretation into a fact.
+
+Give every sub-agent the verbatim primary problem packet rather than only a main-agent summary. A summary may index original artifacts but may not replace them. Pass main-agent reasoning, diagnoses, or prior results only when a later role explicitly requires them, and label claims that lack primary or reproducible evidence as unverified.
 
 Keep the prior attempt log separately as claims plus observations:
 
@@ -45,9 +51,38 @@ claimed hypothesis -> exact material change -> command/submission -> observed re
 
 Stop repeated changes to weights, thresholds, temperatures, tie-breaks, seeds, or runtime allocation. The next hypothesis must concern representation, objective/value model, neighborhood reachability, planning horizon, decomposition, relaxation, or algorithm family.
 
+## Complete the mandatory evaluator gate
+
+For every interactive task and every scored heuristic or optimization task, including AHC, verify that an executable independent local interactor, checker, scorer, simulator, or required combination already satisfies [Checker and Local Evaluation](../checker-and-local-evaluation/SKILL.md). An official score or solver-authored validity function alone does not satisfy this prerequisite. Do not start the trajectory critic, method researcher, challenger comparison, or another submission until the gate is complete.
+
+If the artifact is missing or insufficient, Plateau Escape owns implementing and validating it. Do not defer it to the main agent as a recommendation or mark the structural search complete without it. When delegation is available, assign a dedicated fresh-context evaluator-builder sub-agent that is distinct from the solver/challenger owner, trajectory critic, and method researcher. Give that evaluator builder only:
+
+```text
+verbatim primary problem packet and official original files
+verified toolchain, process, resource, and filesystem facts
+an isolated writable path and the required artifact contract
+```
+
+Initially withhold the champion, solver source, attempt log, current methods, main-agent reasoning, diagnoses, expected results, claimed scores, and unverified summaries. Require the evaluator builder to freeze its evaluator contract, implementation, and initial fixtures before receiving raw candidate outputs, transcripts, or raw official responses for differential validation. Never replace a raw artifact with the main agent's interpretation of it.
+
+Require the evaluator-builder handoff to contain:
+
+```text
+evaluator source paths and content hashes
+exact build and end-to-end run commands
+valid, invalid, boundary, mutation, and tiny hand-computed fixtures
+real-pipe protocol and transcript tests when interactive
+independent legality and raw-objective recomputation when scored
+official/local comparison evidence and unresolved discrepancies
+```
+
+Run those commands and adversarial fixtures before registering the evaluator in the verified fact ledger. If local and official evidence disagree, stop challenger evaluation and minimize that discrepancy first. The solver owner may execute the frozen evaluator but may not alter it to accept a candidate; evaluator changes require official evidence, a hand-computed counterexample, or a failing evaluator test. If delegation is unavailable, perform a sealed evaluator pass with separate files, representations, derivations, and fixtures before resuming the two review roles.
+
 ## Run two independent fresh-context reviews
 
 Use two fresh isolated sub-agents when the environment supports delegation. Prefer the least inherited conversation context and give each a distinct writable path that does not yet exist. Do not let either reviewer see the other's preliminary conclusions, and do not select the next route before both results return.
+
+Give both reviewers the complete verbatim primary problem packet and the frozen evaluator interface. Do not substitute a problem summary or solver narrative for original artifacts. Keep the main agent's reasoning and unreliable results out of the initial review packets; reveal only the role-specific verified evidence described below and only in the stated order.
 
 Give each reviewer the primary problem packet, only the role-specific projection of the verified fact ledger described below, and this write and evaluation contract:
 
@@ -63,7 +98,7 @@ Return the path of every file you create.
 
 Do not place either reviewer in a read-only environment or globally forbid file creation. If the user or enclosing workflow authorizes remote submissions and at least one submission remains, reserve an explicit quota for sub-agent evaluation; allocate at least one submission to the method researcher instead of retaining the entire budget for the main agent. State the evaluator, final metric, quota, deadline, and whether results are synchronous. A sub-agent may not exceed that quota or infer broader authorization. If only the main agent can access the submission transport, it must relay the sub-agent's exact artifact unchanged and return the raw evaluator response; it may not substitute a different candidate or make a method decision at that boundary.
 
-Require compilable source in the target language, exact build/run commands, and portable C++17 when the target does not specify a language standard. New checkers, scorers, interactors, simulators, and evaluation harnesses should be C++ unless the verified interface makes that genuinely impractical.
+Require compilable source in the target language, exact build/run commands, and portable C++17 when the target does not specify a language standard. Any new checker, scorer, interactor, simulator, or evaluation harness must follow [Checker and Local Evaluation](../checker-and-local-evaluation/SKILL.md), should be C++ unless the verified interface makes that genuinely impractical, and must remain owned independently from the challenger it evaluates.
 
 Assign distinct roles:
 

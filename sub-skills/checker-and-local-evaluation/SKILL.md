@@ -3,16 +3,21 @@ name: checker-and-local-evaluation
 description: >-
   Design, implement, debug, and validate independent C++ checkers, scorers,
   interactors, simulators, and local evaluation workflows for algorithmic and
-  competitive-programming tasks. Use when an official evaluator is absent or
-  doubtful, zero or invalid feedback is unexplained, local and remote results
-  disagree, output legality or score must be reconstructed, or an interactive
-  or reactive solver needs an isolated process-level evaluation oracle. Pair
-  with testlib-cpp-judging when the evaluator uses testlib.h.
+  competitive-programming tasks. Mandatory after the first non-full candidate
+  for every interactive or scored heuristic/optimization task, including AHC,
+  before tuning, Plateau Escape, submission, or final delivery. Also use when an
+  official evaluator is absent or doubtful, zero or invalid feedback is
+  unexplained, local and remote results disagree, output legality or score must
+  be reconstructed, or an interactive or reactive solver needs an isolated
+  process-level oracle. Pair with testlib-cpp-judging when the evaluator uses
+  testlib.h.
 ---
 
 # Checker and Local Evaluation
 
 Build an evaluator that is independent of the solver, executable under the target toolchain, and adversarially tested. Treat it as a debugging oracle until official artifacts, hand-computed fixtures, or remote evidence corroborate it.
+
+For an interactive or scored heuristic/optimization task, this is a mandatory post-first-candidate implementation gate, not optional tooling, unless terminal official evidence already verifies a full pass or full score. Do not continue tuning, promote a challenger, enter Plateau Escape, submit remotely, or deliver a final result until the local evaluator exists, runs end to end, and passes the validation requirements below.
 
 ## Assign ownership before coding
 
@@ -28,6 +33,8 @@ Keep evaluator mechanics separate from solver or policy design:
 | Compare solver challengers, seeds, holdouts, and noisy experiments | [validation and experiments](../validation-and-experiments/SKILL.md) |
 
 For a reactive task, let Reactive own action choice and let this skill own the independent transition/reward replayer or judge-facing harness. Development-time repeated scoring of complete offline outputs is not a live reactive process.
+
+Assign the solver/challenger and evaluator to different owners whenever delegation is available. The solver owner may run the frozen evaluator but must not silently change its contract, fixtures, or acceptance logic to admit a candidate.
 
 ## 1. Recover the evaluator contract
 
@@ -60,17 +67,23 @@ Never infer a score transform merely from leaderboard behavior.
 
 Implement the evaluator through a separate code path. Do not copy solver feasibility tests, cached-delta formulas, or the solver's favored interpretation before independently writing the evaluator contract and fixtures.
 
-When applicable instructions permit an independent sub-agent, initially provide only:
+For the mandatory interactive/heuristic gate, delegate evaluator implementation to a dedicated fresh-context sub-agent whenever delegation is available. Do not assign that sub-agent to implement or tune the solver or challenger it will evaluate. Treat this executor-evaluator separation as the default implementation path, not an optional review.
+
+The evaluator sub-agent's initial packet must contain the original problem evidence, not a main-agent reconstruction:
 
 ```text
-statement and exact I/O/protocol format
-constraints, samples, config, and public scoring rules
-candidate input/output or transcript artifacts
-observed official verdicts or scores
+verbatim original statement, title/URL, and exact I/O or protocol format
+official constraints, samples, configs, visualizer, scorer, and public rules
+original instance data or generator and official runner artifacts
 target C++ standard, compiler, flags, and available libraries
+only verified filesystem, process, resource, and submission-interface facts
 ```
 
-Expose solver internals only after the evaluator has materialized its own contract and tests. Without delegation, preserve the same independence with separate files, representations, and derivations.
+Do not replace the original statement or official files with a summary. Initially withhold solver source, candidate identity, solver-derived formulas, attempted-method labels, main-agent reasoning, diagnoses, expected outcomes, claimed scores, and results that lack raw evaluator evidence. A main-agent statement is not a verified fact merely because it is confident or repeated.
+
+Require the evaluator sub-agent to freeze a written contract, source artifact, and initial hand-computed/adversarial fixtures before exposing raw candidate outputs, transcripts, or raw official verdict/score responses. Reveal those later artifacts only when needed for differential validation, with their provenance intact and without the main agent's interpretation. Expose solver internals only after an independently reproduced discrepancy proves they are necessary.
+
+Without delegation, preserve the same information barrier in a sealed pass with separate files, representations, derivations, and fixtures. Do not inspect solver formulas while deriving evaluator formulas. Solver-generated fixtures or agreement between two code paths copied from the same derivation are not independent evidence.
 
 Strongly prefer C++ for every new checker, scorer, interactor, simulator, and process harness. Use the official standard and flags when specified; otherwise use portable C++17. Use another language only when the user requests it, an official artifact must be modified in place, or a required interface makes faithful C++ implementation impractical. Record the concrete exception.
 
@@ -196,3 +209,18 @@ runtime | first failure | official/local discrepancy | keep/revert
 ```
 
 If local and official results disagree, stop solver tuning. Minimize the discrepancy, test competing contract interpretations, and change the evaluator or documented assumption before generating more solver cases under the unchanged validator. If local validation passes but official evaluation remains zero, rederive the missing acceptance condition instead of adding random tests that the same incomplete validator will accept.
+
+For the mandatory post-first-candidate gate, record completion only after all applicable items are present and actually run:
+
+```text
+independent owner or documented sealed-pass fallback
+verbatim original problem packet and evaluator contract
+evaluator source plus exact build/run command
+hand-computed, malformed, boundary, mutation, and tiny-oracle fixtures
+real-pipe transcript tests for interactive tasks
+legality and raw-objective recomputation for scored heuristic tasks
+official/local comparison where an official artifact or result exists
+remaining unknown score transforms or protocol assumptions
+```
+
+Do not report the gate complete from pseudocode, a solver-authored validity function, sample-only agreement, or a score estimate.
