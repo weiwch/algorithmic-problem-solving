@@ -1,0 +1,7 @@
+interface:
+  display_name: "Contest Solver Engineering"
+  short_description: "Harden contest solvers against implementation and environment failures"
+  default_prompt: "Use $contest-solver-engineering to diagnose and repair the implementation or target-environment failure while preserving the justified algorithmic route."
+
+policy:
+  allow_implicit_invocation: false

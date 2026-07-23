@@ -136,10 +136,12 @@ This section owns low-level process, buffering, serialization, and deadline fail
 
 A judge label does not always identify the failing layer. If official feedback gives a nonzero score but says `Wrong Answer` or otherwise reports a non-perfect result:
 
-- Treat it first as legal but low score unless evidence proves invalid.
+- Treat the nonzero score as evidence of partial credit, not as proof that the candidate is fully legal or correct and not as proof that every non-perfect case contributed zero.
+- Do not assume `score = fully passed test cases / total test cases` unless the official evaluator or scoring rules establish that formula. A single case labeled `Wrong Answer` or otherwise not fully correct may still contribute partial points.
+- Recover the per-case raw value or point contribution, weights, rounding, clamps, and final cross-case aggregation with [Checker and Local Evaluation](../checker-and-local-evaluation/SKILL.md). When partial credit exists and the aggregation is established, optimize the final official score rather than the binary count of fully passed cases.
 - If the public scoring formula contains a query-count term, invert it to estimate the hidden query count and compare that estimate with local query categories.
 - If the score has no query-count term, do not invent one; diagnose the actual scored objective instead.
-- Do not spend more than one short cycle on correctness unless local or remote feedback gives zero, a crash, or a protocol error.
+- Prioritize zero score, crash, protocol failure, malformed output, and hard-invalid candidates. Otherwise choose the next correction by its expected improvement to the established final score instead of insisting that every case become binary accepted first.
 
 ## 7. Data structures and invariants
 

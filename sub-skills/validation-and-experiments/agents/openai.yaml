@@ -1,0 +1,7 @@
+interface:
+  display_name: "Validation and Experiments"
+  short_description: "Falsify solver hypotheses and compare challengers rigorously"
+  default_prompt: "Use $validation-and-experiments to design the smallest independent falsifying tests, compare the challenger with the champion, and make an evidence-backed promotion decision."
+
+policy:
+  allow_implicit_invocation: false

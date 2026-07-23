@@ -109,23 +109,32 @@ A controlled comparison uses the same evaluator, comparable budgets, and paired 
 
 A single low score is not by itself a measured plateau, but the below-half rule is an independent mandatory escalation because the remaining gap is too large to justify stopping at local tuning. After the focused recovery loop, this root-level severe-gap signal satisfies Plateau Escape's admission gate. If the score has no meaningful maximum or explicit target, do not invent a halfway point; use the measured-plateau signal instead. Route invalid or contradictory evaluation to Checker and Local Evaluation, implementation/resource failures to Contest Solver Engineering, unclear comparisons to Validation and Experiments, and ordinary search-mechanics weaknesses to Heuristic Search before escalating.
 
-When escalation applies, preserve the champion and give Plateau Escape the recovery snapshot plus the controlled attempt log. Run its two fresh-context sub-agent reviews when delegation is available, then treat their recommendations as actionable evidence: rank them, implement the strongest credible structural challenger, and compile and test it against the champion. Do not stop after collecting reports or return to scalar tuning without testing that challenger. If delegation is unavailable, perform the two sealed independent passes required by that sub-skill.
+When escalation applies, preserve the champion and run Plateau Escape's two fresh-context sub-agent roles when delegation is available. Give the trajectory critic the original problem artifacts and verified facts, then the separately labeled attempt log only after it freezes an independent reconstruction. Give the method researcher the complete original problem and only verified necessary contract, budget, target, and evaluation facts; withhold the champion, attempt history, current method labels, diagnoses, risk labels, rejected-method rationales, and the other review until its independent research map is sealed. If delegation is unavailable, perform the two sealed passes and preserve the same information barrier.
+
+Treat sub-agent work as an executable evidence track, not optional advice:
+
+- When remote submission is authorized and budget remains, delegate an explicit quota and reserve at least one submission for the method researcher. The sub-agent may implement, evaluate, and submit its isolated challenger within that quota without per-submission main-agent approval, then wait for and return the terminal official final score and raw result. If only the main agent can access the transport, relay the exact sub-agent artifact unchanged.
+- Give the method researcher's primary eligible structural method its protected implementation/evaluation slot before new same-family tuning. Every leading proposal must end as evaluated, queued for a named test, or rejected with a proof, primary contract citation, failing artifact, or measurement that matches Plateau Escape's rejection gate.
+- The main agent may not use `risk too high`, unfamiliarity, code size, restructuring cost, or an unmeasured estimate as a veto. Under the same established final evaluator, a legal challenger with a better exact terminal final score and passing hard constraints is promoted mechanically; opinion cannot override that result.
+
+Do not stop after collecting reports, defer all experiments back to the main agent, or resume scalar tuning before the protected structural trial has a terminal result or concrete rejection evidence.
 
 ## Guardrails
 
 - Separate legality from quality and raw objective from displayed score.
+- For scored tasks, optimize the established final official aggregate score; use passed-case count or a proxy only when proven equivalent.
 - Never let a failed or weaker challenger replace the champion.
 - Preserve a legal fallback when interruption, query limits, or deadlines could otherwise erase all value.
 - Isolate checker/scorer/interactor logic from solver-derived formulas when evaluator fidelity is in doubt.
 - Prefer the target language for solver changes. For a new checker, scorer, interactor, simulator, or evaluation harness, strongly prefer target-supported C++ and portable C++17 when unspecified; provide exact build and run commands.
 - Use research when the diagnosed gap requires external facts or another method family. Treat findings as hypotheses that must pass the same contract, compile, validity, objective, and resource gates as local ideas.
-- Do not submit, overwrite a champion, or spend scarce evaluation budget unless the requested workflow authorizes it.
+- Do not submit, overwrite a champion, or spend scarce evaluation budget unless the requested workflow authorizes it. Once an explicit quota is delegated, a sub-agent may spend that quota without repeated approval but still may not mutate the champion.
 
 ## Finish
 
 Rebuild the selected champion cleanly and rerun the focused regression, independent oracle/checker where practical, final serialization or transcript validation, and representative resource probe. Deliver the champion rather than the latest edit.
 
-Before accepting any scored result below half of a meaningful official maximum or explicit target, read and execute Plateau Escape. Use its fresh-context sub-agents to challenge the current trajectory and method family, then implement and test the strongest credible recommendation; do not finish with only their advice or with another round of minor parameter tuning.
+Before accepting any scored result below half of a meaningful official maximum or explicit target, read and execute Plateau Escape. Use its fresh-context sub-agents with role-specific evidence packets, let the method researcher complete its protected challenger through authorized terminal evaluation, and apply the evidence-bound promotion or rejection rule; do not finish with only advice, an unevaluated recommendation, a subjective main-agent veto, or another round of minor parameter tuning.
 
 Report only:
 
@@ -133,5 +142,6 @@ Report only:
 root cause and decisive evidence
 implemented correction or promoted challenger
 commands/tests actually run and their results
+sub-agent submission id and exact final score when applicable
 remaining assumptions or material risk
 ```

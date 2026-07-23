@@ -1,7 +1,7 @@
 interface:
   display_name: "Plateau Escape"
-  short_description: "Escape a verified solver plateau with structural alternatives"
-  default_prompt: "Use $plateau-escape to audit this verified quality plateau, research independent method families, test a minimally faithful structural challenger, and protect the champion."
+  short_description: "Research, implement, and score a structural plateau escape"
+  default_prompt: "Use $plateau-escape to research the original problem from verified facts, implement and independently evaluate a structural challenger through its terminal score, and bind adoption or rejection to concrete evidence."
 
 policy:
   allow_implicit_invocation: false

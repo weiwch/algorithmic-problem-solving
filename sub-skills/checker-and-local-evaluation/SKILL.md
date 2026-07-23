@@ -150,6 +150,8 @@ Answer these questions independently:
 
 Determine minimization versus maximization, integer versus floating arithmetic, the rounding point, clamps, thresholds, piecewise rules, ratios, logarithms, and per-case or per-round aggregation. Establish whether reference data is an optimum, baseline, bound, or jury objective. Define behavior for zero denominators and degenerate equal-reference cases.
 
+Do not assume the displayed score is the fraction of fully passed test cases unless the operational evaluator establishes that equivalence. A case reported as `Wrong Answer` or otherwise non-perfect may still award partial points. Reconstruct each case's raw value or point contribution and the official cross-case weighting and aggregation. Once established, use the final official aggregate score as the solver-comparison and promotion target; use fully passed case count only as a diagnostic or as a proven-equivalent objective.
+
 Keep the raw objective authoritative even when normalization remains unknown. For reactive episodes, recompute transition-local rewards and the final aggregation rather than accepting policy logs; use [reactive online decision problem solving](../reactive-online-decision-problem-solving/SKILL.md) to judge whether the policy itself estimates, plans, or explores well.
 
 ## 6. Implement process-level interactors and simulators

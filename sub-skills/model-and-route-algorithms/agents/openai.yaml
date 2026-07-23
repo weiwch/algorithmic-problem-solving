@@ -1,0 +1,7 @@
+interface:
+  display_name: "Model and Route Algorithms"
+  short_description: "Repair algorithm models and select a feasible solution route"
+  default_prompt: "Use $model-and-route-algorithms to repair the static model and proof obligations, then select the strongest solution class justified by the real bounds."
+
+policy:
+  allow_implicit_invocation: false
