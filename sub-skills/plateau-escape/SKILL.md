@@ -14,18 +14,9 @@ description: >-
 
 Protect the verified champion, challenge the current problem representation, and test a structurally different method before resuming scalar tuning.
 
-## Admission gate
+## Entry contract
 
-Confirm all of the following before using this workflow:
-
-- The champion is legal under a trusted evaluator and fits the resource budget.
-- The observed failure is solution quality, not validity, evaluator fidelity, protocol, compilation, crash, or resource failure.
-- Controlled evidence meets at least one plateau criterion:
-  - `5-8` submissions with less than `1%` of the score scale in total improvement;
-  - when submissions are unavailable or sparse, `2-3` materially different challengers without meaningful improvement under a trusted local evaluator;
-  - after several controlled attempts, the champion remains more than `10%` of the score scale below a stated target.
-
-A single disappointing score is not a plateau. Diagnose zero/invalid feedback with [checker and local evaluation](../checker-and-local-evaluation/SKILL.md), resource failures with [contest solver engineering](../contest-solver-engineering/SKILL.md), and ordinary weak search mechanics with [heuristic search](../../references/heuristic-search.md).
+Enter only when the root [scored-recovery escalation](../../SKILL.md#escalate-weak-scored-recovery) routes here. Treat that routing decision as authoritative instead of re-deriving plateau thresholds in this sub-skill. The handoff must identify the measured-plateau or severe-score-gap signal and include the trusted-evaluator, champion-legality, resource, and controlled-attempt evidence used by the root; if it does not, return to the root router.
 
 ## Freeze the baseline of evidence
 

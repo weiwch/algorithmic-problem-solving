@@ -4,4 +4,4 @@ interface:
   default_prompt: "Use $reactive-online-decision-problem-solving to model this uncertain decision process, build a legal risk-aware policy, balance exploration with reward, and evaluate it against the current champion."
 
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

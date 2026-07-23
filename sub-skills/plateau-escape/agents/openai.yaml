@@ -4,4 +4,4 @@ interface:
   default_prompt: "Use $plateau-escape to audit this verified quality plateau, research independent method families, test a minimally faithful structural challenger, and protect the champion."
 
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

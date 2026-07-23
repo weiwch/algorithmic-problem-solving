@@ -4,4 +4,4 @@ interface:
   default_prompt: "Use $checker-and-local-evaluation to design, implement, and validate an independent checker, scorer, interactor, or local evaluation workflow."
 
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

@@ -4,4 +4,4 @@ interface:
   default_prompt: "Use $interactive-problem-solving to formalize the protocol and hidden hypotheses, design information-gaining queries, implement the interaction safely, and validate it with adversarial transcripts."
 
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false
