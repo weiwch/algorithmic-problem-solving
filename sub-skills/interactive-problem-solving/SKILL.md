@@ -49,7 +49,7 @@ correctness and score dependence on answers, queries, actions, and time
 
 Replay sequential updates, rounding, accumulators, and state transitions literally. When prose and executable behavior differ, document both, derive their legal intersection, and use the intersection when it preserves correctness and budget. If a stronger solution depends on executable-only behavior, name and directly test that dependency.
 
-For ordinary deterministic checker validity or score reconstruction, use [checker and local evaluation](../checker-and-local-evaluation/SKILL.md) rather than treating every checker call as an interactive query.
+Only when a concrete unresolved deterministic validity or score question requires independent reconstruction, use [checker and local evaluation](../checker-and-local-evaluation/SKILL.md) rather than treating checker calls as interactive queries. Coherent accepted official evidence does not trigger that route by itself.
 
 ## 2. Model hypotheses and identifiability
 
@@ -101,13 +101,13 @@ answer(solution)
 
 `ask` owns serialization, budget accounting, flushing, reply validation, and immediate termination on judge error or EOF. Keep diagnostics off stdout. Put buffering, deadline, numeric, and target-toolchain fixes in [contest solver engineering](../contest-solver-engineering/SKILL.md); do not mix them into the query-selection proof.
 
-## 5. Validate with a simulator and adversarial transcripts
+## 5. Validate with a simulator when diagnostic
 
-Use [checker and local evaluation](../checker-and-local-evaluation/SKILL.md) to implement and adversarially validate the process-level simulator/interactor, real-pipe runner, transcript contract, and independent state/reward replay. Use [validation and experiments](../validation-and-experiments/SKILL.md#7-interactive-and-reactive-evaluator-validation) to incorporate those artifacts into the broader validation ladder and solver comparison loop.
+Route to [checker and local evaluation](../checker-and-local-evaluation/SKILL.md) when a concrete protocol symptom, disputed state transition, unexplained official response, or strategy hypothesis needs a process-level simulator/interactor, real-pipe runner, transcript contract, or independent state/reward replay. If accepted official interactions have stable protocol behavior and coherent feedback, do not build a simulator solely because this section was reached; defer it until it can expose or discriminate a problem. Once routed, use [validation and experiments](../validation-and-experiments/SKILL.md#7-interactive-and-reactive-evaluator-validation) to incorporate those artifacts into the broader validation ladder and solver comparison loop.
 
-When the repository uses `testlib.h`, first keep the evaluator contract and independence rules in Checker and Local Evaluation, then follow [testlib C++ judging](../testlib-cpp-judging/SKILL.md) for the concrete interactor/checker API and build commands.
+When evaluator work is routed and the repository uses `testlib.h`, first keep the evaluator contract and independence rules in Checker and Local Evaluation, then follow [testlib C++ judging](../testlib-cpp-judging/SKILL.md) for the concrete interactor/checker API and build commands.
 
-Validate the information strategy itself with:
+When such a simulator or transcript campaign is justified, validate the information strategy itself with:
 
 - exhaustive tiny hidden states;
 - exact budget exhaustion and final-answer accounting;

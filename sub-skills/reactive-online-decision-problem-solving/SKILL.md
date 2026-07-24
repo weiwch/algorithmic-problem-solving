@@ -101,7 +101,7 @@ Never replace the champion with a seed-sensitive or invalid challenger. If contr
 
 ## 5. Evaluate repeated feedback correctly
 
-Use [checker and local evaluation](../checker-and-local-evaluation/SKILL.md) to implement an independent episode replayer, scorer, interactor, or process harness that validates actions against the pre-action state and recomputes transitions and rewards. That sub-skill owns evaluator isolation, executable contracts, and adversarial evaluator tests; this skill owns the estimator, planner, explorer, and policy-level diagnosis. When the evaluator uses `testlib.h`, follow the concrete Testlib route linked there.
+When a concrete legality, transition, reward, protocol, or official-feedback uncertainty needs local diagnosis, route to [checker and local evaluation](../checker-and-local-evaluation/SKILL.md) to implement an independent episode replayer, scorer, interactor, or process harness. Coherent accepted online episodes do not require this route solely because the policy is reactive; local replay may be deferred while the open question is policy quality. Once routed, that sub-skill owns evaluator isolation, executable contracts, and adversarial evaluator tests; this skill owns the estimator, planner, explorer, and policy-level diagnosis. When the evaluator uses `testlib.h`, follow the concrete Testlib route linked there.
 
 Use [validation and experiments](../validation-and-experiments/SKILL.md) for champion/challenger discipline, paired cases/seeds, holdouts, and release checks.
 

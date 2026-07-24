@@ -158,14 +158,29 @@ Check reachability explicitly. Repeated legal moves may accidentally preserve pa
 
 Once a simple neighborhood reaches a local optimum, derive the exact delta of the smallest coordinated move and necessary conditions for positive gain. Those conditions often reduce a nominal quadratic or combinatorial scan to a small structural candidate set. Benchmark that stronger, problem-specific neighborhood and its gain per second before using tabu, annealing, or random walks to compensate for weak moves.
 
-For LNS:
+Use LNS when improvement requires coordinated edits, small legal moves cannot cross the relevant barrier, or single-variable changes usually break feasibility. Treat partial destruction and bounded reconstruction as one neighborhood:
 
 ```text
-select region -> remove/relax -> randomized or exact repair ->
-score complete state -> accept/reject -> update best
+select a related region -> remove/relax variables -> randomized or exact repair ->
+validate and score the complete state -> accept/reject -> update best
 ```
 
-Bound ruin size and repair time. Schedule operators from measured gain/second, best-update rate, phase, and stagnation. Retain a rare barrier-crossing move when its long-term value is demonstrated, even if immediate delta is weak.
+Representative destroy-repair pairs include:
+
+- paths/orders: remove a segment, visits, or a spatial region, preserve the boundary, then reconnect or reinsert;
+- groups/assignments: release several groups or merge components, then rebuild with greedy, matching, flow, MST, DP, shortest path, beam search, or a bounded exact solve;
+- schedules: clear a time window, task batch, or conflict chain, then repack it with greedy, DP, or min-cost flow.
+
+Also consider fixing most variables and reoptimizing only one region. The destroyed variables may remain temporarily undecided, but repair must restore legality before acceptance.
+
+A strong default is LNS neighborhood generation with hill-climbing or simulated-annealing acceptance:
+
+```text
+destroy a substantial related region -> rebuild it with a strong method -> score ->
+accept if improving, or accept by SA probability -> retain the best valid state
+```
+
+Use ALNS when several meaningfully different destroy and repair operators are available. Keep an exploration floor and adapt operator or operator-pair selection from cost-normalized gain, best-update rate, search phase, and stagnation. Bound ruin size and repair time; retain a rare barrier-crossing operator when measurements show long-term value.
 
 ## 7. True objective, proxies, and penalties
 

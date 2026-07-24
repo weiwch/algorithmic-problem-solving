@@ -51,9 +51,9 @@ claimed hypothesis -> exact material change -> command/submission -> observed re
 
 Stop repeated changes to weights, thresholds, temperatures, tie-breaks, seeds, or runtime allocation. The next hypothesis must concern representation, objective/value model, neighborhood reachability, planning horizon, decomposition, relaxation, or algorithm family.
 
-## Complete the mandatory evaluator gate
+## Complete the phase-local mandatory evaluator gate
 
-For every interactive task and every scored heuristic or optimization task, including AHC, read and execute [Checker and Local Evaluation](../checker-and-local-evaluation/SKILL.md) in full, then verify that an executable independent local interactor, checker, scorer, simulator, or required combination satisfies it. An official score or solver-authored validity function alone does not satisfy this prerequisite. Do not start the trajectory critic, method researcher, challenger comparison, another submission, or final delivery until the gate is complete.
+For every interactive task and every scored heuristic or optimization task, including AHC, read and execute [Checker and Local Evaluation](../checker-and-local-evaluation/SKILL.md) in full, then verify that an executable independent local interactor, checker, scorer, simulator, or required combination satisfies it. This is a Plateau Escape phase requirement activated by the verified plateau or severe score gap; it is not a global requirement after the first non-full candidate. An official score or solver-authored validity function alone does not satisfy this prerequisite. Do not start the trajectory critic, method researcher, challenger comparison, another submission, or final delivery until the gate is complete.
 
 If the artifact is missing or insufficient, Plateau Escape owns implementing and validating it. Do not defer it to the main agent as a recommendation or mark the structural search complete without it. When delegation is available, MUST assign implementation to a dedicated fresh-context evaluator-builder sub-agent that is distinct from the solver/challenger owner, trajectory critic, and method researcher. That builder must read the complete Checker and Local Evaluation sub-skill and own the executable artifact and its validation, not merely audit another owner's evaluator. Give that evaluator builder only:
 
@@ -73,6 +73,8 @@ Require the evaluator-builder handoff to contain:
 evaluator source/executable paths and content hashes
 exact end-to-end run and applicable build commands
 valid, invalid, boundary, mutation, and tiny hand-computed fixtures
+coverage table, parameterized generator and validator commands, and seed manifest when generated cases are needed
+original and minimized failing cases with full provenance when a failure is found
 real-pipe protocol and transcript tests when interactive
 independent legality and raw-objective recomputation when scored
 official/local comparison evidence and unresolved discrepancies

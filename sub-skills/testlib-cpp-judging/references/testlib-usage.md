@@ -211,10 +211,47 @@ Useful primitives include:
 - `rnd.partition(count, sum, minPart)` for an integer partition.
 - `opt<T>(1)` for a positional argument and `opt<T>("n")` for `-n` or
   `--n` style options.
-- `print` and `println` for stable whitespace-separated output.
+- `println` for stable whitespace-separated lines; use standard C++ output when
+  custom no-newline formatting is required.
 
-After generation, validate the produced file with the problem validator when
-one exists.
+After generation, validate every intended-valid produced file with the problem
+validator. If a routed randomized, batch, or large-data campaign has no
+validator yet, implement the independent validator before relying on the
+generated cases.
+
+### Parameterized campaigns and large cases
+
+Treat a generator as executable provenance for a coverage family. For randomized, batch, or large cases, expose the family and relevant structural parameters explicitly rather than hand-editing the emitted file:
+
+```cpp
+#include "testlib.h"
+
+int main(int argc, char* argv[]) {
+    registerGen(argc, argv, 1);
+
+    std::string family = opt<std::string>("family");
+    int n = opt<int>("n");
+    int bias = opt<int>("bias");
+    long long seedTag = opt<long long>("seed");
+
+    // The complete command line, including seedTag, determines rnd's seed.
+    // Implement each problem-specific family and print exactly one valid case.
+    ensuref(n > 0, "n must be positive");
+    (void)family;
+    (void)bias;
+    (void)seedTag;
+    println(n);
+}
+```
+
+A case can then be reproduced from its full command:
+
+```bash
+./generator --family=random --n=200000 --bias=2 --seed=104729 > case.in
+./validator < case.in || exit 1
+```
+
+Implement the actual family semantics in C++; the placeholder above only demonstrates parameter and seed provenance. Use a small coded driver to enumerate a batch parameter matrix, invoke the generator once per case, validate each emitted file, and record a manifest. Keep at least the case id, family, full command, generator hash/version, input hash, and validator result. Preserve failing commands and seeds with the corresponding input, solver output, evaluator diagnostic, and transcript. Do not use manually assembled maximum-size files or unlabeled random dumps as reproducible test sources.
 
 ## Interactor
 

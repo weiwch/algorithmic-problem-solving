@@ -19,7 +19,7 @@ Recover implementation and environment failures after the algorithmic route is j
 This skill owns target-toolchain reproduction, numeric and memory safety, measured runtime, low-level I/O, serialization, randomness, implementation invariants, and release hardening. Route:
 
 - a contradicted state, recurrence, reduction, proof, or asymptotic route to [model and route algorithms](../model-and-route-algorithms/SKILL.md);
-- evaluator parsing, legality, score reconstruction, or official/local disagreement to [checker and local evaluation](../checker-and-local-evaluation/SKILL.md);
+- evaluator parsing, legality, or score uncertainty that blocks the current decision, or official/local disagreement to [checker and local evaluation](../checker-and-local-evaluation/SKILL.md);
 - experiment design and champion/challenger comparison to [validation and experiments](../validation-and-experiments/SKILL.md);
 - query strategy and hidden-state inference to [interactive problem solving](../interactive-problem-solving/SKILL.md);
 - scored construction, representation, moves, deltas, and optimizer behavior to the shared [heuristic search](../../references/heuristic-search.md).
@@ -128,7 +128,7 @@ For interactive output:
 - do not wait for an initial token the protocol never sends;
 - avoid naming helpers so they collide with standard-library functions.
 
-Test the real process through pipes against a simulator to expose buffering and EOF mistakes.
+When a concrete buffering, flush, deadlock, premature-EOF, or process-wiring symptom needs local reproduction, test the real process through pipes against a simulator. Stable coherent official interactions do not require simulator construction solely for this section; route evaluator implementation through Checker and Local Evaluation only when that diagnostic evidence exists.
 
 This section owns low-level process, buffering, serialization, and deadline failures. Interactive Problem Solving owns the protocol contract, hypothesis model, and query strategy.
 
@@ -138,7 +138,7 @@ A judge label does not always identify the failing layer. If official feedback g
 
 - Treat the nonzero score as evidence of partial credit, not as proof that the candidate is fully legal or correct and not as proof that every non-perfect case contributed zero.
 - Do not assume `score = fully passed test cases / total test cases` unless the official evaluator or scoring rules establish that formula. A single case labeled `Wrong Answer` or otherwise not fully correct may still contribute partial points.
-- Recover the per-case raw value or point contribution, weights, rounding, clamps, and final cross-case aggregation with [Checker and Local Evaluation](../checker-and-local-evaluation/SKILL.md). When partial credit exists and the aggregation is established, optimize the final official score rather than the binary count of fully passed cases.
+- If the per-case raw contribution, weights, rounding, clamps, or final aggregation is unknown or contradicted and that uncertainty blocks the current decision, recover it with [Checker and Local Evaluation](../checker-and-local-evaluation/SKILL.md). When coherent official rules or results already establish the aggregation, use them without constructing a local evaluator. Optimize the established final official score rather than the binary count of fully passed cases.
 - If the public scoring formula contains a query-count term, invert it to estimate the hidden query count and compare that estimate with local query categories.
 - If the score has no query-count term, do not invent one; diagnose the actual scored objective instead.
 - Prioritize zero score, crash, protocol failure, malformed output, and hard-invalid candidates. Otherwise choose the next correction by its expected improvement to the established final score instead of insisting that every case become binary accepted first.

@@ -3,21 +3,36 @@ name: checker-and-local-evaluation
 description: >-
   Design, implement, debug, and validate independent C++ checkers, scorers,
   interactors, simulators, and local evaluation workflows for algorithmic and
-  competitive-programming tasks. Mandatory after the first non-full candidate
-  for every interactive or scored heuristic/optimization task, including AHC,
-  before tuning, Plateau Escape, submission, or final delivery. Also use when an
-  official evaluator is absent or doubtful, zero or invalid feedback is
-  unexplained, local and remote results disagree, output legality or score must
-  be reconstructed, or an interactive or reactive solver needs an isolated
-  process-level oracle. Pair with testlib-cpp-judging when the evaluator uses
-  testlib.h.
+  competitive-programming tasks. Use when concrete evidence makes evaluator
+  reconstruction diagnostic: an official evaluator is absent or doubtful and
+  blocks a decision, zero/invalid/WA or impossible feedback is unexplained,
+  local and remote behavior disagrees, output legality or score must be
+  reconstructed, an interactive protocol fails, or Plateau Escape requires its
+  phase-local evaluator gate. Do not invoke solely because the first candidate
+  is non-full or no local evaluator exists; coherent accepted online submissions
+  may continue while local construction is deferred. Pair with
+  testlib-cpp-judging when the evaluator or data generator uses testlib.h.
 ---
 
 # Checker and Local Evaluation
 
-Build an evaluator that is independent of the solver, executable under the target toolchain, and adversarially tested. Treat it as a debugging oracle until official artifacts, hand-computed fixtures, or remote evidence corroborate it.
+Build an evaluator that is independent of the solver, executable under the target toolchain, and adversarially tested. Treat local construction and evaluation as tools for finding or discriminating a problem, and treat the result as a debugging oracle until official artifacts, hand-computed fixtures, or remote evidence corroborate it.
 
-For an interactive or scored heuristic/optimization task, this is a mandatory post-first-candidate implementation gate, not optional tooling, unless terminal official evidence already verifies a full pass or full score. Do not continue tuning, promote a challenger, enter Plateau Escape, submit remotely, or deliver a final result until the local evaluator exists, runs end to end, and passes the validation requirements below.
+## Enter only on diagnostic evidence
+
+Enter this skill when at least one of these conditions holds:
+
+- evaluator semantics or missing official artifacts block a concrete diagnosis, promotion, or release decision;
+- official feedback is unexplained invalid, zero, WA, discontinuous, impossible under the stated formula, or inconsistent across comparable runs beyond known randomness;
+- local and official results or prose and executable behavior disagree;
+- legality, raw objective, normalization, transition/reward replay, or a protocol state must be independently reconstructed;
+- an interactive run exposes deadlock, flush, EOF, timeout, action-budget, response-order, or termination uncertainty;
+- a specific suspected bug, rare edge, resource boundary, or score-quality hypothesis needs generated instances that official feedback cannot isolate; or
+- Plateau Escape has already been admitted for an interactive or scored heuristic/optimization task and requires repeated independent challenger evaluation.
+
+Do not enter merely because a task is interactive, heuristic, or scored; because a first candidate is non-full; because a local tool is absent; or because another online submission is planned. If official submissions are accepted, legality and protocol are stable, scores are coherent with the known contract, and the unresolved question is solver quality, return to the appropriate algorithm, Heuristic Search, Interactive, or Reactive route. Local construction may be postponed until a concrete signal makes it discriminating.
+
+Once entered, build only the smallest evaluator, transcript, fixture, or generated campaign that can expose or falsify the signal. Stop expanding local infrastructure after the issue is localized, the hypothesis is falsified, or coherent official evidence resolves the uncertainty. Plateau Escape is the deliberate exception: its verified plateau or severe score gap activates the full phase-local evaluator gate before challenger comparison.
 
 ## Assign ownership before coding
 
@@ -67,7 +82,7 @@ Never infer a score transform merely from leaderboard behavior.
 
 Implement the evaluator through a separate code path. Do not copy solver feasibility tests, cached-delta formulas, or the solver's favored interpretation before independently writing the evaluator contract and fixtures.
 
-For the mandatory interactive or scored heuristic/optimization gate, MUST delegate evaluator ownership to a dedicated fresh-context sub-agent whenever delegation is available. Do not assign that sub-agent to implement or tune the solver or challenger it will evaluate, or later reuse it as a challenger owner, trajectory critic, method researcher, or other method reviewer for the same task. Treat this executor-evaluator separation as the default implementation path, not an optional review. If the required evaluator is missing or insufficient, the evaluator owner must implement, compile, and validate the missing executable artifact. If a faithful official evaluator already exists, it must instead own independent contract recovery, adversarial fixtures, validation, and any required runner or harness; do not rewrite official source merely to manufacture ownership separation. Require the evaluator owner to read this entire skill and own its end-to-end deliverables; a review memo or pseudocode does not discharge that ownership.
+When this evidence-triggered route or Plateau Escape requires evaluator implementation or independent validation, MUST delegate evaluator ownership to a dedicated fresh-context sub-agent whenever delegation is available. Do not assign that sub-agent to implement or tune the solver or challenger it will evaluate, or later reuse it as a challenger owner, trajectory critic, method researcher, or other method reviewer for the same task. Treat this executor-evaluator separation as the default implementation path once evaluator work is actually routed, not as a reason to route early. If the required evaluator is missing or insufficient, the evaluator owner must implement, compile, and validate the missing executable artifact. If a faithful official evaluator already exists, it must instead own independent contract recovery, adversarial fixtures, validation, and any required runner or harness; do not rewrite official source merely to manufacture ownership separation. Require the evaluator owner to read this entire skill and own its end-to-end deliverables; a review memo or pseudocode does not discharge that ownership.
 
 The evaluator sub-agent's initial packet must contain the original problem evidence, not a main-agent reconstruction:
 
@@ -132,6 +147,63 @@ exit 2: evaluator, configuration, or judge-data failure
 ```
 
 Do not impose this generic exit contract on `testlib.h`. Follow [testlib C++ judging](../testlib-cpp-judging/SKILL.md) for its exact three-file invocation, streams, verdicts, points behavior, and interactor registration.
+
+## Build problem-finding data end to end
+
+Construct a local input campaign only when it can test a named failure or quality hypothesis. Carry it through this complete chain:
+
+```text
+coverage strategy -> parameterized generator code -> input validator
+-> solver -> independent checker/scorer/interactor -> manifest and retained failures
+```
+
+### 1. Freeze a coverage strategy
+
+Before generating volume, write a compact coverage table:
+
+```text
+case family | suspected failure/edge | varied parameters and range
+size tier | expected oracle/invariant/relation | development or holdout
+```
+
+Choose only relevant axes from size, density, topology or structure, numeric magnitude, constraint slack, equality/contact, duplication, symmetry/degeneracy, feasibility margin, protocol branch, and randomness/noise. Select the applicable official samples, hand-computed anchors, minimal or maximum boundaries, and families for implicated hard constraints. Add uniform random, biased, structured, adversarial, or metamorphic families only when each has a stated purpose. Random volume without a falsifiable target is not coverage.
+
+### 2. Implement a parameterized generator
+
+For more than a handful of cases, any randomized or batch campaign, and every maximum-scale or otherwise large instance, write a problem-specific generator program. Do not hand-edit large inputs or copy-paste many near-duplicates. Expose the applicable family, size, density/bias, structure, and explicit seed or seed tag as command-line parameters so every case is reconstructible from one command. Generate one case per deterministic invocation, or use a small coded batch driver that records each invocation before running it.
+
+Prefer portable C++17 unless the official toolchain dictates otherwise. When `testlib.h` is available or appropriate, read and use [testlib C++ judging](../testlib-cpp-judging/SKILL.md): Testlib supports deterministic data generation through `registerGen(argc, argv, 1)`, `opt`, `rnd`, and `println`; use standard C++ output when custom no-newline formatting is required. Keep generator logic separate from the solver and from the input validator.
+
+### 3. Validate every generated input
+
+Implement or use an independent strict input validator before trusting generated cases. Every generated case intended to be valid must pass it before the solver runs; deliberately invalid validator tests belong in a separate negative suite and must fail for the named reason. Fail the campaign immediately on a validator error rather than teaching the solver or evaluator to accept the generator's mistake.
+
+Use the literal sequence:
+
+```text
+generator <full parameters> > case.in
+validator < case.in
+solver < case.in > case.out
+independent evaluator case.in case.out [...]
+```
+
+Pin source or executable hashes and exact build commands for the generator, validator, solver, and evaluator. The validator must enforce grammar, bounds, cross-field constraints, and EOF independently of the generator's construction logic.
+
+### 4. Pair evaluation and retain provenance
+
+Compare champion and challenger on the same generated inputs and instance/noise seeds. Keep instance-generation, solver, and judge/noise seeds separate. Record per-case validity, raw objective or protocol verdict, established score, runtime, and first failure instead of only an aggregate.
+
+Retain a machine-readable or line-oriented manifest containing at least:
+
+```text
+case id and family | full generator command | generator version/hash
+instance seed/tag | input hash | validator version/result
+solver identity and seed | evaluator version | verdict/raw score/runtime
+```
+
+On failure, preserve the original input, output, transcript, diagnostics, and full commands. Minimize the failure when practical, but keep both original and reduced artifacts; add the smallest stable reproducer to the regression set. Preserve the exact seed and parameter tuple for every rare, stochastic, invalid, timeout, or score-outlier case. Never retain only a screenshot, aggregate, or unlabeled data file.
+
+Start with hand-computed and tiny cases. Expand to batch or maximum-scale generation only when needed to expose a rare failure, distinguish close scoring hypotheses, or probe resources. Stop when the target problem is localized or falsified; local campaign size is not a completion metric.
 
 ## 4. Parse and validate by reconstruction
 
@@ -210,7 +282,7 @@ runtime | first failure | official/local discrepancy | keep/revert
 
 If local and official results disagree, stop solver tuning. Minimize the discrepancy, test competing contract interpretations, and change the evaluator or documented assumption before generating more solver cases under the unchanged validator. If local validation passes but official evaluation remains zero, rederive the missing acceptance condition instead of adding random tests that the same incomplete validator will accept.
 
-For the mandatory post-first-candidate gate, record completion only after all applicable items are present and actually run:
+For routed evaluator work, record completion only after all applicable items are present and actually run:
 
 ```text
 independent evaluator-builder not reused as solver/challenger/reviewer, or documented sealed-pass fallback
@@ -218,10 +290,12 @@ verbatim original problem packet and evaluator contract
 evaluator artifact path/hash and exact run command
 source/build command when source exists; harness source/build command when required
 hand-computed, malformed, boundary, mutation, and tiny-oracle fixtures
+coverage table, generator source/build/full commands, validator evidence, and seed manifest when a generated campaign was needed
+original and minimized failing input/output/transcript artifacts when a failure was found
 real-pipe transcript tests for interactive tasks
 legality and raw-objective recomputation for scored heuristic/optimization tasks
 official/local comparison where an official artifact or result exists
 remaining unknown score transforms or protocol assumptions
 ```
 
-Do not report the gate complete from pseudocode, a solver-authored validity function, sample-only agreement, or a score estimate.
+Do not report the evaluator trusted from pseudocode, a solver-authored validity function, sample-only agreement, a score estimate, or generated inputs that never passed an independent validator.

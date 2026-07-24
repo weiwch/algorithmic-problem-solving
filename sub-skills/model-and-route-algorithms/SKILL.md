@@ -25,7 +25,7 @@ Use the **model-repair entry** when the failed attempt may be solving the wrong 
 
 This skill owns static combinatorial modeling, correctness obligations, and exact/constructive/hybrid/heuristic route choice. Route other failure layers as follows:
 
-- evaluator parsing, legality, objective, or official/local disagreement: [checker and local evaluation](../checker-and-local-evaluation/SKILL.md);
+- evaluator parsing, legality, or objective uncertainty that blocks the current decision, or official/local disagreement: [checker and local evaluation](../checker-and-local-evaluation/SKILL.md);
 - hidden-state acquisition and query semantics: [interactive problem solving](../interactive-problem-solving/SKILL.md);
 - reward-bearing sequential decisions under uncertainty: [reactive online decision problem solving](../reactive-online-decision-problem-solving/SKILL.md);
 - compile, numeric, memory-layout, serialization, or measured deadline failure after the route is justified: [contest solver engineering](../contest-solver-engineering/SKILL.md);
