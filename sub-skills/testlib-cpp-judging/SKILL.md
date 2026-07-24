@@ -49,7 +49,7 @@ Define the coverage families and their expected oracle, invariant, or failure ta
 
 Always invoke a checker in this exact order:
 
-```text
+```
 checker <input-file> <contestant-output> <standard-answer>
 ```
 

@@ -16,7 +16,7 @@ description: >-
 
 Reduce uncertainty until the answer is uniquely or sufficiently determined:
 
-```text
+```
 understand the interaction contract
         -> design a query
         -> observe and update hypotheses
@@ -35,7 +35,7 @@ For an output-only task with a checker or a custom judge, treat an evaluated can
 
 Read the statement and every supplied interactor, tester, checker, scorer, runner, and configuration file relevant to the information channel. Record:
 
-```text
+```
 initial judge output and ordering
 legal query/candidate syntax and parameter bounds
 exact deterministic response function or stochastic observation model
@@ -55,7 +55,7 @@ Only when a concrete unresolved deterministic validity or score question require
 
 Formalize deterministic interaction as:
 
-```text
+```
 H_t       hidden states consistent with the transcript through time t
 R(h, q)   exact response to query q in hidden state h
 H_{t+1} = {h in H_t : R(h, q_t) matches the observed response}
@@ -92,7 +92,7 @@ Do not multiply per-query success probabilities without establishing independenc
 
 Keep the solver's information logic behind a small interface:
 
-```text
+```
 read_initial()
 ask(query) -> response
 update(response)

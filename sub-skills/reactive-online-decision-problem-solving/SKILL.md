@@ -15,7 +15,7 @@ description: >-
 
 Make good decisions under uncertainty. The central question is: **What should be done now?** An action's value combines immediate reward, future opportunity, information, and risk.
 
-```text
+```
 observe -> update belief/model -> generate actions -> legal/risk filter
         -> choose and act -> receive feedback -> repeat
 ```
@@ -32,7 +32,7 @@ If a reactive task contains a separable calibration or hidden-state identificati
 
 Record the operational decision process:
 
-```text
+```
 observable state/history and latent uncertainty
 legal actions or candidate-output representation
 state transition and feedback timing
@@ -70,7 +70,7 @@ Aggregate feedback may not identify every latent parameter. Optimize prediction 
 
 Define every outcome as a higher-is-better utility `U`; for a minimization objective, negate or otherwise reorient the cost first. For a separable information-gathering action `a`, feedback outcome `y`, and later decision `d`, a conceptual value-of-information test is:
 
-```text
+```
 VOI(a) = E_y[max_d E[U(d) | y, a]]
          - max_d E[U(d)]
          - immediate_and_opportunity_cost(a)
@@ -90,7 +90,7 @@ For scored construction, neighborhoods, incremental deltas, SA, beam search, LNS
 
 Maintain:
 
-```text
+```
 legal fallback policy or output
 current model/policy state
 best independently validated legal champion
@@ -107,7 +107,7 @@ Use [validation and experiments](../validation-and-experiments/SKILL.md) for cha
 
 Separate randomness sources:
 
-```text
+```
 instance seed | transition/judge noise | solver RNG | host/runtime noise
 ```
 

@@ -8,7 +8,7 @@ If the evidence already meets the admission criteria for [plateau escape](../sub
 
 Estimate costs before selecting an optimizer:
 
-```text
+```
 C_init    construction/restart cost
 C_full    full legality and true-score recomputation
 C_move    proposal + precheck + delta + accept/undo
@@ -21,7 +21,7 @@ Measure representative kernels. Include copying, allocation, cache misses, hashi
 
 Raw search size alone is not actionable:
 
-```text
+```
 S_raw = product of variable domain sizes
 S_effective = S_raw after constraints, symmetry, decomposition, and reachability
 ```
@@ -32,7 +32,7 @@ Compare the number and diversity of states that can actually be evaluated with `
 
 For an independent per-trial target probability `p`:
 
-```text
+```
 P(at least one hit in N trials) = 1 - (1-p)^N
 N needed for probability q      = ceil(log(1-q) / log(1-p))
 ```
@@ -41,7 +41,7 @@ For small `p`, a 99% hit probability needs about `N*p >= 4.6`. Do not multiply p
 
 Instrument the transition funnel per move type:
 
-```text
+```
 p_valid       = valid proposals / proposals
 p_accept      = accepted / valid
 p_structural  = objective-relevant changes / accepted
@@ -67,7 +67,7 @@ For unknown hit rates, pilot `m` comparable trials. If zero hits occur, `3/m` is
 
 Map the objective to its natural combinatorial object:
 
-```text
+```
 routes rather than visited flags
 machine/task sequences rather than isolated start times
 components/cuts/matchings rather than unrelated labels
@@ -79,7 +79,7 @@ Model constraints at their real granularity. An edge conflict need not forbid a 
 
 Prefer:
 
-```text
+```
 valid state -> validity-preserving move -> valid state
 ```
 
@@ -87,7 +87,7 @@ Temporary infeasibility is justified only when violation is cheap and informativ
 
 Maintain explicit roles:
 
-```text
+```
 current_state, current_search_value, current_true_score
 best_valid_state, best_true_score
 candidate move, affected set, delta, rollback log
@@ -98,7 +98,7 @@ primary structure, inverse indices, local contributions, constraint counts
 
 When legality or score depends on a path, cycle, component, schedule, or other global object, keep that object as primary state instead of only low-level variables. Use one atomic compound move:
 
-```text
+```
 destroy a bounded substructure -> repair under fixed boundary constraints ->
 validate the complete structure -> commit, otherwise exact rollback
 ```
@@ -127,14 +127,14 @@ Measure construction time, validity, raw score, diversity, and score after a fix
 
 When the objective is a sum of local contributions and a move affects `A`:
 
-```text
+```
 delta = sum over i in A of (new_local_i - old_local_i)
 sample -> identify affected data -> precheck -> apply/delta -> accept or undo
 ```
 
 Implement `apply`, `undo`, `delta`, `validate`, and full true-score recomputation. During development, periodically assert:
 
-```text
+```
 cached score == full score
 cached constraints == full constraints
 undo(apply(state, move)) == original state
@@ -148,7 +148,7 @@ A useful move should preserve or cheaply restore legality, change score-relevant
 
 Use multiple scales when the problem requires them:
 
-```text
+```
 small: change, swap, relocate, reverse, insert/remove, 2-opt
 medium: block exchange, cycle/exchange chain, merge/split, subpath reroute
 large: region rebuild, destroy-and-repair, restart, exact local reoptimization
@@ -158,9 +158,18 @@ Check reachability explicitly. Repeated legal moves may accidentally preserve pa
 
 Once a simple neighborhood reaches a local optimum, derive the exact delta of the smallest coordinated move and necessary conditions for positive gain. Those conditions often reduce a nominal quadratic or combinatorial scan to a small structural candidate set. Benchmark that stronger, problem-specific neighborhood and its gain per second before using tabu, annealing, or random walks to compensate for weak moves.
 
+Before adding another metaheuristic, freeze most decisions and ask whether the released local structure becomes a known subproblem. Use [technique selection](technique-selection.md) to choose and reject inner solvers rather than inventing a weak bespoke repair. Strong heuristic solvers often use:
+
+```
+outer stochastic search chooses what to release ->
+bounded deterministic optimizer rebuilds that subproblem -> outer acceptance
+```
+
+For example, the outer search may release a task set and an inner DP may reschedule it. Bound the inner solver's time, reconstruct its decisions, and validate the combined solution.
+
 Use LNS when improvement requires coordinated edits, small legal moves cannot cross the relevant barrier, or single-variable changes usually break feasibility. Treat partial destruction and bounded reconstruction as one neighborhood:
 
-```text
+```
 select a related region -> remove/relax variables -> randomized or exact repair ->
 validate and score the complete state -> accept/reject -> update best
 ```
@@ -175,12 +184,14 @@ Also consider fixing most variables and reoptimizing only one region. The destro
 
 A strong default is LNS neighborhood generation with hill-climbing or simulated-annealing acceptance:
 
-```text
+```
 destroy a substantial related region -> rebuild it with a strong method -> score ->
 accept if improving, or accept by SA probability -> retain the best valid state
 ```
 
 Use ALNS when several meaningfully different destroy and repair operators are available. Keep an exploration floor and adapt operator or operator-pair selection from cost-normalized gain, best-update rate, search phase, and stagnation. Bound ruin size and repair time; retain a rare barrier-crossing operator when measurements show long-term value.
+
+Do not tune temperatures, ruin sizes, operator weights, or thresholds indefinitely. After bounded calibration fails to improve beyond measured noise, change the representation, neighborhood, decomposition, objective, or inner optimizer; parameter tuning should calibrate a sound method, not substitute for improving it.
 
 ## 7. True objective, proxies, and penalties
 
@@ -196,7 +207,7 @@ Use a surrogate when the true score is sparse, discontinuous, or flat. Build it 
 
 Constraint preference order:
 
-```text
+```
 feasibility-preserving representation
 bounded deterministic repair
 adaptive penalty with measured feasible rate
@@ -230,7 +241,7 @@ Evaluate stochastic optimizers under the scoring rule that will actually be used
 
 Examples of parameter derivation:
 
-```text
+```
 SA accepts worsening delta -d with probability p at T:
 T = -d / log(p)
 
@@ -251,7 +262,7 @@ Estimate `d` from observed loss quantiles and choose desired early/late acceptan
 
 Use a monotonic clock and an internal deadline. Time controls both stopping and policy:
 
-```text
+```
 early: diverse construction / larger moves / model learning
 middle: main improvement process
 late: intensification and safe local polish

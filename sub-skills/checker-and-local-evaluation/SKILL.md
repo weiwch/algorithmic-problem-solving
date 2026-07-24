@@ -55,7 +55,7 @@ Assign the solver/challenger and evaluator to different owners whenever delegati
 
 Record the operational contract before implementing it:
 
-```text
+```
 instance and candidate grammar
 hard validity constraints and first-failure policy
 raw objective, direction, numeric domain, and aggregation
@@ -69,7 +69,7 @@ Read every supplied checker, scorer, interactor, runner, configuration file, and
 
 Separate these outcomes explicitly:
 
-```text
+```
 candidate invalid
 candidate valid with raw objective
 candidate valid with normalized or partial score
@@ -86,7 +86,7 @@ When this evidence-triggered route or Plateau Escape requires evaluator implemen
 
 The evaluator sub-agent's initial packet must contain the original problem evidence, not a main-agent reconstruction:
 
-```text
+```
 verbatim original statement, title/URL, and exact I/O or protocol format
 official constraints, samples, configs, visualizer, scorer, and public rules
 original instance data or generator and official runner artifacts
@@ -104,7 +104,7 @@ Strongly prefer C++ for every new checker, scorer, interactor, simulator, and pr
 
 Return executable artifacts rather than only pseudocode:
 
-```text
+```
 evaluator source/executable paths, content hashes, and component roles
 exact run command and, when source exists, build command
 small valid, invalid, boundary, and transcript fixtures
@@ -128,7 +128,7 @@ Use the smallest role that matches the contract:
 
 For a batch checker or scorer, keep stages explicit and independently testable:
 
-```text
+```
 instance = parse_input(...)
 candidate = parse_output(...)
 require_output_exhausted()
@@ -139,7 +139,7 @@ score = normalize(raw, public_reference_data)  # optional
 
 For a non-testlib local tool, a simple interface is sufficient:
 
-```text
+```
 local_eval INPUT OUTPUT [ANSWER_OR_CONFIG]
 exit 0: valid; stdout contains raw objective and optional established score
 exit 1: invalid; stderr contains the first actionable candidate failure
@@ -152,7 +152,7 @@ Do not impose this generic exit contract on `testlib.h`. Follow [testlib C++ jud
 
 Construct a local input campaign only when it can test a named failure or quality hypothesis. Carry it through this complete chain:
 
-```text
+```
 coverage strategy -> parameterized generator code -> input validator
 -> solver -> independent checker/scorer/interactor -> manifest and retained failures
 ```
@@ -161,7 +161,7 @@ coverage strategy -> parameterized generator code -> input validator
 
 Before generating volume, write a compact coverage table:
 
-```text
+```
 case family | suspected failure/edge | varied parameters and range
 size tier | expected oracle/invariant/relation | development or holdout
 ```
@@ -180,7 +180,7 @@ Implement or use an independent strict input validator before trusting generated
 
 Use the literal sequence:
 
-```text
+```
 generator <full parameters> > case.in
 validator < case.in
 solver < case.in > case.out
@@ -195,7 +195,7 @@ Compare champion and challenger on the same generated inputs and instance/noise 
 
 Retain a machine-readable or line-oriented manifest containing at least:
 
-```text
+```
 case id and family | full generator command | generator version/hash
 instance seed/tag | input hash | validator version/result
 solver identity and seed | evaluator version | verdict/raw score/runtime
@@ -269,13 +269,13 @@ When possible, implement the tiny brute oracle or objective calculator with a di
 
 Build the evaluator when source exists, then exercise its command-line or process contract before relying on it. For each challenger, run:
 
-```text
+```
 solver -> independent evaluator -> first failure or raw objective delta
 ```
 
 Record only:
 
-```text
+```
 candidate | valid/invalid | raw objective | established score
 runtime | first failure | official/local discrepancy | keep/revert
 ```
@@ -284,7 +284,7 @@ If local and official results disagree, stop solver tuning. Minimize the discrep
 
 For routed evaluator work, record completion only after all applicable items are present and actually run:
 
-```text
+```
 independent evaluator-builder not reused as solver/challenger/reviewer, or documented sealed-pass fallback
 verbatim original problem packet and evaluator contract
 evaluator artifact path/hash and exact run command

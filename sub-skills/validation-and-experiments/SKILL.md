@@ -63,7 +63,7 @@ When a mismatch appears, minimize it and identify the first violated model or pr
 
 Always keep:
 
-```text
+```
 fallback: simplest guaranteed-valid emergency output
 challenger/current: mutable experimental candidate
 champion: best independently validated legal artifact
@@ -84,7 +84,7 @@ Use Checker and Local Evaluation when the official checker/scorer is absent or d
 
 Record one line per material attempt:
 
-```text
+```
 champion | hypothesis | one change | fixed cases/seeds
 validity | per-case score/runtime delta | keep/revert | next action
 ```
@@ -104,7 +104,7 @@ Promote only when the challenger stays legal, fits the budget with margin, and i
 
 Keep randomness sources distinct:
 
-```text
+```
 instance seed | solver seed | judge/noise seed | host/runtime noise
 ```
 

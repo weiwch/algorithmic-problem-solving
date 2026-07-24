@@ -29,7 +29,7 @@ Once activated, do not restart reflexively. Reconstruct the actual contract and 
 
 Use artifact terms consistently:
 
-```text
+```
 fallback   simplest guaranteed-valid emergency output
 challenger experimental candidate evaluated against the champion
 champion   best independently validated legal artifact
@@ -40,7 +40,7 @@ baseline   external scoring/evaluation reference, never a solver artifact
 
 Collect only the facts needed to reproduce and localize the failure:
 
-```text
+```
 statement, bounds, and operational evaluator contract
 attempted model, algorithm, proof assumptions, and complexity
 source/build/run commands and target toolchain
@@ -103,17 +103,10 @@ Every non-full AHC or equivalent scored heuristic/optimization task MUST read He
 
 Apply the routes as follows:
 
-```text
-offline, complete input, one final output
-  -> Heuristic Search
-
-live observations/feedback change later reward-bearing actions
-  -> Reactive Online Decision Problem Solving
-  -> Heuristic Search
-
-separable query stage primarily reduces hidden hypotheses
-  -> Interactive Problem Solving for that stage
-  -> keep the applicable Heuristic and/or Reactive route for score-bearing actions
+```
+offline, complete input, one final output -> Heuristic Search
+live observations/feedback change later reward-bearing actions -> Reactive Online Decision Problem Solving -> Heuristic Search
+separable query stage primarily reduces hidden hypotheses -> Interactive Problem Solving for that stage; keep the applicable Heuristic and/or Reactive route for score-bearing actions
 ```
 
 Heuristic Search is the mandatory AHC baseline. It owns representation, construction, neighborhoods, rollout/search mechanics, incremental evaluation, reachability, optimizer choice, and time allocation. For a live online AHC, Reactive owns the outer observable/latent state, estimator, planner, explorer, feedback update, horizon, and risk policy; then read Heuristic Search for the concrete action-generation or inner-search machinery. Do not let either document substitute for the other.
@@ -124,9 +117,8 @@ Do not add Reactive merely because the output encodes a long action sequence or 
 
 Use this ownership rule when a task has feedback:
 
-```text
+```
 Interactive: understand protocol -> choose query -> update hypotheses -> recover a sufficiently determined hidden answer
-
 Reactive:    observe -> estimate -> choose a legal action -> receive reward -> update policy until the horizon/task/budget ends
 ```
 
@@ -184,9 +176,11 @@ Rebuild the selected champion cleanly and rerun the focused regression, final se
 
 Before accepting any scored result below 70% of a meaningful official maximum or explicit target, read and execute Plateau Escape. Use its fresh-context sub-agents with role-specific evidence packets, let every selected rank-1 critic/research track complete its authorized iteration loop and stop condition, and apply the evidence-bound promotion or rejection rule; do not finish with only advice, an unevaluated recommendation, a subjective main-agent veto, or another round of minor parameter tuning.
 
+An official score of `0`, or below `30%` of a meaningful maximum/target, is an immediate plateau: do not finish; invoke Plateau Escape and MUST run both fresh-context roles (or both sealed passes). Discard prior main-agent diagnoses, rankings, and rejections except independently verified facts. Adopt their common rank-1 route; if they disagree, execute both. The main agent may not veto; run each to its stop/rejection gate and promote only legal measured champions.
+
 Report only:
 
-```text
+```
 root cause and decisive evidence
 implemented correction or promoted challenger
 commands/tests actually run and their results

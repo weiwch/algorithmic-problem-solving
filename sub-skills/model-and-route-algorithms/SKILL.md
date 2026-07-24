@@ -14,7 +14,7 @@ description: >-
 
 Establish a trusted static model and proof target before selecting a solution class. Enter at the earliest unresolved stage and do not reopen an upstream stage without new contradictory evidence.
 
-```text
+```
 operational contract -> sufficient model/state -> proof obligation
 -> resource envelope -> admissible solution class -> concrete method family
 ```
@@ -35,7 +35,7 @@ This skill owns static combinatorial modeling, correctness obligations, and exac
 
 Remove story terms and write:
 
-```text
+```
 Given instance I, choose x in F(I).
 Hard constraints: C_j(I, x) = true for every j.
 Raw objective: minimize/maximize f(I, x).
@@ -75,7 +75,7 @@ Falsify a proposed compression by constructing two histories with the same compr
 
 For every reduction, define both mappings:
 
-```text
+```
 original feasible solution -> reduced feasible solution
 reduced feasible solution  -> reconstructed original solution
 ```
@@ -116,7 +116,7 @@ Do not pass the model checkpoint until the operational contract, state/reduction
 
 Extract from the actual bounds:
 
-```text
+```
 number of states or objects
 branching and transitions per state
 number of test cases or instances
@@ -129,7 +129,7 @@ Use worst-case bounds for correctness and representative pilots for constants. A
 
 For bounded exponential methods, estimate the actual remaining exponent:
 
-```text
+```
 raw variables -> forced decisions -> components -> symmetry classes
 -> kernel size -> meet-in-the-middle split -> remaining states
 ```
@@ -150,7 +150,7 @@ For exact-output tasks, an incomplete search is not converted into an exact algo
 
 For each credible exact or exact-hybrid candidate, record:
 
-```text
+```
 state/object count and transition count
 worst-case time with test-count and reconstruction factors
 peak memory in bytes, including parents and allocator overhead
@@ -175,7 +175,7 @@ For heuristic or scored-hybrid mechanics, read the shared [heuristic search](../
 
 When approximation is allowed, common scored hybrids include:
 
-```text
+```
 heuristic global order + exact local scheduling
 heuristic destroy set + exact DP/matching/flow repair
 exact solution on small components + heuristic coupling
@@ -188,7 +188,7 @@ For each exact subproblem, quantify its size, solve cost, call frequency, cache 
 
 Keep a single handoff rather than separate modeling and feasibility reports:
 
-```text
+```
 entry mode and decisive failure evidence
 operational contract and disputed interpretation
 trusted model, state, reduction, and proof obligation

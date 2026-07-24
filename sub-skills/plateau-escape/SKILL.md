@@ -25,7 +25,7 @@ Enter only when the root [scored-recovery escalation](../../SKILL.md#escalate-we
 
 Do not mutate the champion during diagnosis. Preserve the original problem artifacts rather than replacing them with a summary. Build two records:
 
-```text
+```
 primary problem packet
   verbatim original statement content/title/URL and exact I/O or protocol
   original constraints, objective, scoring and aggregation rules
@@ -45,7 +45,7 @@ Give every sub-agent the verbatim primary problem packet rather than only a main
 
 Keep the prior attempt log separately as claims plus observations:
 
-```text
+```
 claimed hypothesis -> exact material change -> command/submission -> observed result
 ```
 
@@ -57,7 +57,7 @@ For every interactive task and every scored heuristic or optimization task, incl
 
 If the artifact is missing or insufficient, Plateau Escape owns implementing and validating it. Do not defer it to the main agent as a recommendation or mark the structural search complete without it. When delegation is available, MUST assign implementation to a dedicated fresh-context evaluator-builder sub-agent that is distinct from the solver/challenger owner, trajectory critic, and method researcher. That builder must read the complete Checker and Local Evaluation sub-skill and own the executable artifact and its validation, not merely audit another owner's evaluator. Give that evaluator builder only:
 
-```text
+```
 complete Checker and Local Evaluation sub-skill as the implementation contract
 verbatim primary problem packet and official original files
 only necessary verified toolchain, process, resource, and filesystem facts
@@ -69,7 +69,7 @@ Initially withhold the champion, solver source, attempt log, current methods, ma
 
 Require the evaluator-builder handoff to contain:
 
-```text
+```
 evaluator source/executable paths and content hashes
 exact end-to-end run and applicable build commands
 valid, invalid, boundary, mutation, and tiny hand-computed fixtures
@@ -90,7 +90,7 @@ Give both reviewers the complete verbatim primary problem packet and the frozen 
 
 Give each reviewer the primary problem packet, only the role-specific projection of the verified fact ledger described below, and this write and evaluation contract:
 
-```text
+```
 You may create and edit files only under: <fresh_agent_output_path>
 Do not modify, delete, rename, or overwrite any pre-existing file.
 Treat every pre-existing artifact, including the champion, as read-only.
@@ -112,7 +112,7 @@ Explore aggressively across high-upside representations, objectives, decompositi
 
 Phrase each rank-1 assignment as:
 
-```text
+```
 Implement the rank-1 applicable method by expected terminal official score.
 Start with its smallest faithful structural prototype, preserve its defining
 mechanism, then iteratively repair and improve it through the delegated
@@ -123,7 +123,7 @@ evaluation and submission quota.
 
 For either role, use this protected rank-1 loop within the authorized quota:
 
-```text
+```
 raw local/official result -> diagnose defining weakness from evidence
 -> method-faithful repair, completion, or structural refinement
 -> local legality/objective validation -> next authorized submission -> repeat
@@ -135,7 +135,7 @@ Return executable code and fixtures plus a completed ordered iteration record, n
 
 The iteration record for each role must include:
 
-```text
+```
 rank-1 track identity, expected-score rationale, quota and stop conditions
 for every iteration: candidate path/hash, diagnosis, and material change
 exact build, run, validation and submission commands per iteration
@@ -182,7 +182,7 @@ Map every candidate to the exact contract. Distinguish source-backed facts, inde
 
 Implementation convenience, familiarity, code size, or a main-agent preference is not rejection evidence and does not permit skipping a higher-ranked method. For the current highest-ranked eligible method, own the full track end to end:
 
-```text
+```
 research -> faithful implementation -> compile -> local legality/objective checks
 -> champion comparison -> authorized official submission -> diagnose and iterate
 -> terminal evaluator result or exhausted delegated quota
@@ -224,7 +224,7 @@ When a user-imposed authorization, submission quota, deadline, language, or arti
 
 When a reviewer returns code, keep it as a separate challenger and run:
 
-```text
+```
 inspect -> compile -> repair trivial integration defects once
 -> legality/objective/runtime validation -> sub-agent-owned authorized submission
 -> diagnose -> repair or improve -> repeat within delegated quota
@@ -239,7 +239,7 @@ End this escape cycle only after every selected rank-1 track has reached one of 
 
 Return:
 
-```text
+```
 plateau evidence
 role-specific input packets and reviewer rankings
 source/evidence index, prototype and exact commands

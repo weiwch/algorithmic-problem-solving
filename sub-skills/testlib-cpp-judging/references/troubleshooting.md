@@ -14,7 +14,7 @@ Symptom: the checker says it must be run with input, output, and answer files.
 
 Use exactly:
 
-```text
+```
 ./checker case.in case.out case.ans
 ```
 

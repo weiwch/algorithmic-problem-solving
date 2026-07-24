@@ -287,7 +287,7 @@ skill's `solution < case.in > case.out` command is not an interactive runner.
 
 ## Minimal File Layout
 
-```text
+```
 work/
   testlib.h
   solution.cpp

@@ -111,7 +111,7 @@ Test geometry with coincident, collinear, tangent, zero-area, extreme-coordinate
 
 Choose the operation algebra before the structure:
 
-```text
+```
 query type | point/range update | online/offline | persistence | coordinate size
 ```
 

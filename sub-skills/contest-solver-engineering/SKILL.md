@@ -28,7 +28,7 @@ This skill owns target-toolchain reproduction, numeric and memory safety, measur
 
 Read the config and build command. Record:
 
-```text
+```
 language standard and compiler version
 optimization/debug flags and architecture flags
 available headers, libraries, and runtime
@@ -40,7 +40,7 @@ Compile early with the actual standard. Avoid assuming optional libraries, Boost
 
 Use warnings in development, for example:
 
-```text
+```
 -Wall -Wextra -Wshadow -Wconversion
 ```
 
@@ -63,7 +63,7 @@ Sanitizers (`address`, `undefined`) are valuable on development tests, but use a
 
 Estimate bytes, not just Big-O:
 
-```text
+```
 vector capacity, node padding, allocator metadata, hash load factor,
 recursion stack, duplicated versions, rollback logs, per-test clearing
 ```
@@ -76,7 +76,7 @@ Do not clear an `O(max_size)` table per tiny test when timestamps or touched ind
 
 Use a monotonic clock such as `steady_clock`. Set an internal limit below the official time and include parsing, construction, final validation, and output.
 
-```text
+```
 deadline = start + internal_budget
 periodic check interval * worst move time bounds overshoot
 ```
@@ -147,7 +147,7 @@ A judge label does not always identify the failing layer. If official feedback g
 
 Advanced structures are high-risk code. For each operation state:
 
-```text
+```
 precondition, mutation, lazy/tag composition, maintained aggregate,
 index convention, complexity, inverse/rollback behavior
 ```
