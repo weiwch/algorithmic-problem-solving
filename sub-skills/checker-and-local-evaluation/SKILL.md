@@ -49,7 +49,7 @@ Keep evaluator mechanics separate from solver or policy design:
 
 For a reactive task, let Reactive own action choice and let this skill own the independent transition/reward replayer or judge-facing harness. Development-time repeated scoring of complete offline outputs is not a live reactive process.
 
-Assign the solver/challenger and evaluator to different owners whenever delegation is available. The solver owner may run the frozen evaluator but must not silently change its contract, fixtures, or acceptance logic to admit a candidate.
+Keep solver/challenger and evaluator work in separate files and derivation paths. Freeze the evaluator contract and initial fixtures before inspecting solver internals. Later solver work may run the frozen evaluator but must not silently change its contract, fixtures, or acceptance logic to admit a candidate.
 
 ## 1. Recover the evaluator contract
 
@@ -82,9 +82,9 @@ Never infer a score transform merely from leaderboard behavior.
 
 Implement the evaluator through a separate code path. Do not copy solver feasibility tests, cached-delta formulas, or the solver's favored interpretation before independently writing the evaluator contract and fixtures.
 
-When this evidence-triggered route or Plateau Escape requires evaluator implementation or independent validation, MUST delegate evaluator ownership to a dedicated fresh-context sub-agent whenever delegation is available. Do not assign that sub-agent to implement or tune the solver or challenger it will evaluate, or later reuse it as a challenger owner, trajectory critic, method researcher, or other method reviewer for the same task. Treat this executor-evaluator separation as the default implementation path once evaluator work is actually routed, not as a reason to route early. If the required evaluator is missing or insufficient, the evaluator owner must implement, compile, and validate the missing executable artifact. If a faithful official evaluator already exists, it must instead own independent contract recovery, adversarial fixtures, validation, and any required runner or harness; do not rewrite official source merely to manufacture ownership separation. Require the evaluator owner to read this entire skill and own its end-to-end deliverables; a review memo or pseudocode does not discharge that ownership.
+When this evidence-triggered route or Plateau Escape requires evaluator implementation or independent validation, MUST perform it as a sealed evaluator pass isolated from solver/challenger derivation. Treat this separation as the default implementation path once evaluator work is actually routed, not as a reason to route early. If the required evaluator is missing or insufficient, read this entire skill and implement, compile, and validate the missing executable artifact end to end. If a faithful official evaluator already exists, independently recover its contract, create adversarial fixtures, validate it, and implement any required runner or harness; do not rewrite official source merely to manufacture separation. A review memo or pseudocode does not discharge the executable deliverables.
 
-The evaluator sub-agent's initial packet must contain the original problem evidence, not a main-agent reconstruction:
+The sealed evaluator pass must start from original problem evidence, not a prior reconstruction:
 
 ```
 verbatim original statement, title/URL, and exact I/O or protocol format
@@ -94,11 +94,11 @@ target C++ standard, compiler, flags, and available libraries
 only necessary verified filesystem, process, resource, and submission-interface facts
 ```
 
-Do not replace the original statement or official files with a summary. Initially withhold solver source, candidate identity, solver-derived formulas, attempted-method labels, main-agent reasoning, diagnoses, expected outcomes, claimed scores, and results that lack raw evaluator evidence. A main-agent statement is not a verified fact merely because it is confident or repeated.
+Do not replace the original statement or official files with a summary. During the initial pass, do not open solver source, candidate identity, solver-derived formulas, attempted-method labels, prior reasoning, diagnoses, expected outcomes, claimed scores, or results that lack raw evaluator evidence. A prior statement is not a verified fact merely because it is confident or repeated.
 
-Require the evaluator sub-agent to freeze a written contract, evaluator artifact, and initial hand-computed/adversarial fixtures before exposing raw candidate outputs, transcripts, or raw official verdict/score responses. Reveal those later artifacts only when needed for differential validation, with their provenance intact and without the main agent's interpretation. Expose solver internals only after an independently reproduced discrepancy proves they are necessary.
+Freeze a written contract, evaluator artifact, and initial hand-computed/adversarial fixtures before opening raw candidate outputs, transcripts, or raw official verdict/score responses. Open those later artifacts only when needed for differential validation, with provenance intact and without prior interpretation. Inspect solver internals only after an independently reproduced discrepancy proves they are necessary.
 
-Without delegation, preserve the same information barrier in a sealed pass with separate files, representations, derivations, and fixtures. Do not inspect solver formulas while deriving evaluator formulas. Solver-generated fixtures or agreement between two code paths copied from the same derivation are not independent evidence.
+Preserve this information barrier with a dedicated writable path and separate files, representations, derivations, and fixtures. Do not inspect solver formulas while deriving evaluator formulas. Solver-generated fixtures or agreement between two code paths copied from the same derivation are not independent evidence.
 
 Strongly prefer C++ for every new checker, scorer, interactor, simulator, and process harness. Use the official standard and flags when specified; otherwise use portable C++17. Use another language only when the user requests it, an official artifact must be modified in place, or a required interface makes faithful C++ implementation impractical. Record the concrete exception.
 
@@ -285,7 +285,7 @@ If local and official results disagree, stop solver tuning. Minimize the discrep
 For routed evaluator work, record completion only after all applicable items are present and actually run:
 
 ```
-independent evaluator-builder not reused as solver/challenger/reviewer, or documented sealed-pass fallback
+sealed evaluator pass isolated from solver/challenger derivation and files
 verbatim original problem packet and evaluator contract
 evaluator artifact path/hash and exact run command
 source/build command when source exists; harness source/build command when required

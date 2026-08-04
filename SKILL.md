@@ -10,8 +10,8 @@ description: >-
   on concrete evaluator, legality, scoring, protocol, or diagnostic evidence,
   or when Plateau Escape requires its phase-local gate. Coherent accepted online
   submissions may continue, deferring local data/evaluation until it can expose
-  a problem. When routed and delegation exists, assign a fresh-context evaluator
-  owner and give it originals rather than solver reasoning. Also use
+  a problem. When routed, derive the evaluator in a sealed independent pass from
+  original artifacts before consulting solver reasoning. Also use
   for WA, TLE/MLE, crashes, invalid output, evaluator disagreement, score gaps,
   stalled heuristics, or interactive/reactive failures. Do not use before a
   fresh problem's first focused attempt.
@@ -93,9 +93,9 @@ Do not route solely because the task is interactive, scored, heuristic, or AHC; 
 
 Once routed, start with the smallest artifact and data that can reproduce or falsify the signal. Build a broader generated campaign only when hand-computed cases, one failing transcript, or direct official evidence cannot localize it. Follow Checker and Local Evaluation's complete `coverage strategy -> parameterized generator -> validator -> evaluator -> seed/failure retention` workflow; when using `testlib.h`, pair it with [testlib C++ judging](sub-skills/testlib-cpp-judging/SKILL.md). Batch, randomized, or maximum-scale data must come from reproducible generator code rather than hand-authored large files.
 
-When routed evaluator work requires implementation or independent validation and delegation is available, assign ownership to a dedicated fresh-context sub-agent that did not author the solver or challenger; do not reuse it as a challenger owner, trajectory critic, method researcher, or other method reviewer for the same task. Give it the verbatim original statement and official original artifacts first, plus only necessary verified toolchain and access facts. Withhold solver internals, solver-derived formulas, main-agent diagnoses, method preferences, estimated scores, and unverified summaries until it has frozen the evaluator contract and initial fixtures. If delegation is unavailable, perform a sealed independent pass with separate files, representations, derivations, and fixtures.
+When routed evaluator work requires implementation or independent validation, perform it as a sealed pass before resuming solver or challenger work. Use separate files, representations, derivations, and fixtures. Begin from the verbatim original statement and official artifacts plus only necessary verified toolchain and access facts. Do not inspect solver internals, solver-derived formulas, prior diagnoses, method preferences, estimated scores, or unverified summaries until the evaluator contract and initial fixtures are frozen.
 
-Plateau Escape retains the stricter phase-local rule: for an interactive or scored heuristic/optimization task, it must implement and validate any missing evaluator artifact before its reviewers compare structural challengers. This exception is triggered by the verified plateau or severe score gap, not by the first non-full candidate.
+Plateau Escape retains the stricter phase-local rule: for an interactive or scored heuristic/optimization task, it must implement and validate any missing evaluator artifact before its two sealed reviews compare structural challengers. This exception is triggered by the verified plateau or severe score gap, not by the first non-full candidate.
 
 ## Additive AHC routing
 
@@ -147,17 +147,17 @@ A controlled comparison uses the same evaluator, comparable budgets, and paired 
 
 A single low score is not by itself a measured plateau, but the below 70% rule is an independent mandatory escalation because the remaining gap is too large to justify stopping at local tuning. After the focused recovery loop, this root-level severe-gap signal satisfies Plateau Escape's admission gate. If the score has no meaningful maximum or explicit target, do not invent a halfway point; use the measured-plateau signal instead. Route invalid or contradictory evaluation to Checker and Local Evaluation, implementation/resource failures to Contest Solver Engineering, unclear comparisons to Validation and Experiments, and ordinary search-mechanics weaknesses to Heuristic Search before escalating.
 
-When escalation applies, preserve the champion and run Plateau Escape's two fresh-context sub-agent roles when delegation is available. Give the trajectory critic the original problem artifacts and verified facts, then the separately labeled attempt log only after it freezes an independent reconstruction. Give the method researcher the complete original problem and only verified necessary contract, budget, target, and evaluation facts; withhold the champion, attempt history, current method labels, diagnoses, risk labels, rejected-method rationales, and the other review until its independent research map is sealed. If delegation is unavailable, perform the two sealed passes and preserve the same information barrier.
+When escalation applies, preserve the champion and run Plateau Escape's two sealed review roles. Give the trajectory critic the original problem artifacts and verified facts, then open the separately labeled attempt log only after freezing an independent reconstruction. Run the method-research pass from the complete original problem and only verified necessary contract, budget, target, and evaluation facts; keep the champion, attempt history, current method labels, diagnoses, risk labels, rejected-method rationales, and trajectory review outside that pass until its independent research map is sealed. Store each pass in a separate path, freeze its report before synthesis, and do not rewrite either report to agree with the other.
 
-Treat sub-agent work as an executable evidence track, not optional advice:
+Treat both sealed reviews and their protected rank-1 tracks as executable evidence, not optional advice:
 
-- When remote submission is authorized and budget remains, delegate an explicit quota and reserve at least one submission for the method researcher; when the budget permits, also allocate a separate multi-submission iteration quota to each selected rank-1 critic/research track. Prioritize those iterations over easier lower-ranked methods or retaining unused budget for the main agent. Both reviewers should implement, evaluate, improve, and submit their own isolated challengers instead of returning them for subjective main-agent screening. If only the main agent can access the transport, relay each exact sub-agent artifact unchanged and return the raw result for every iteration.
+- When remote submission is authorized and budget remains, allocate an explicit quota and reserve at least one submission for the method-research track; when the budget permits, also allocate a separate multi-submission iteration quota to each selected rank-1 critic/research track. Prioritize those iterations over easier lower-ranked methods or retaining unused budget. Each track should implement, evaluate, improve, and submit its isolated challenger instead of ending at a recommendation. Submit the exact artifact produced by the track and retain the raw result for every iteration.
 - Encourage both roles to explore aggressively across high-upside representations, objectives, decompositions, neighborhoods, planning horizons, relaxations, and algorithm families, including methods that require a substantial rewrite. Aggressive exploration never waives legality, evaluator fidelity, final judge limits, or submission authorization.
-- Require both roles to freeze rankings by the evidence-weighted expected terminal final official aggregate score achievable under the verified remaining hard time, compute, and submission budget. Implementation difficulty, code size, rewrite scope, familiarity, prototype speed, or ability to finish within one sub-agent turn is not a ranking criterion. A turn boundary is not a hard scope limit: continue the same isolated rank-1 owner through follow-up tasks when supported. Task each role to implement its rank-1 applicable method, start with that method's smallest faithful structural prototype, and iteratively repair and improve it through the delegated evaluation/submission quota; `smallest` scopes the first experiment, not the method choice.
+- Require both roles to freeze rankings by the evidence-weighted expected terminal final official aggregate score achievable under the verified remaining hard time, compute, and submission budget. Implementation difficulty, code size, rewrite scope, familiarity, prototype speed, or ability to finish within one short pass is not a ranking criterion. A conversational turn boundary is not a hard scope limit: continue the same isolated rank-1 track and writable path through follow-up work when supported. Execute each role's rank-1 applicable method, start with that method's smallest faithful structural prototype, and iteratively repair and improve it through the authorized evaluation/submission quota; `smallest` scopes the first experiment, not the method choice.
 - Process both frozen rankings in order. Do not select a lower-ranked method until every higher-ranked method has Plateau Escape's required recorded elimination evidence. Every leading proposal must end as iteratively evaluated, queued for a named test, or rejected with a proof, primary contract citation, failing artifact, or measurement that matches Plateau Escape's rejection gate.
-- The main agent may not use `risk too high`, unfamiliarity, code size, restructuring cost, or an unmeasured estimate as a veto. Under the same established final evaluator, a legal challenger with a better exact terminal final score and passing hard constraints is promoted mechanically; opinion cannot override that result.
+- Do not use `risk too high`, unfamiliarity, code size, restructuring cost, or an unmeasured estimate as a veto. Under the same established final evaluator, promote a legal challenger mechanically when it has a better exact terminal final score and passes hard constraints; opinion cannot override that result.
 
-Do not stop after collecting reports, defer all experiments back to the main agent, or resume scalar tuning before each selected rank-1 structural track reaches Plateau Escape's iteration stop condition or concrete rejection evidence.
+Do not stop after collecting reports, defer all experiments to an unspecified later phase, or resume scalar tuning before each selected rank-1 structural track reaches Plateau Escape's iteration stop condition or concrete rejection evidence.
 
 ## Guardrails
 
@@ -168,15 +168,15 @@ Do not stop after collecting reports, defer all experiments back to the main age
 - Isolate checker/scorer/interactor logic from solver-derived formulas when evaluator fidelity is in doubt.
 - Prefer the target language for solver changes. For a new checker, scorer, interactor, simulator, or evaluation harness, strongly prefer target-supported C++ and portable C++17 when unspecified; provide exact build and run commands.
 - Use research when the diagnosed gap requires external facts or another method family. Treat findings as hypotheses that must pass the same contract, compile, validity, objective, and resource gates as local ideas.
-- Do not submit, overwrite a champion, or spend scarce evaluation budget unless the requested workflow authorizes it. Once an explicit quota is delegated, a sub-agent may spend that quota without repeated approval but still may not mutate the champion.
+- Do not submit, overwrite a champion, or spend scarce evaluation budget unless the requested workflow authorizes it. Once an explicit quota is authorized for a protected track, it may spend that quota without repeated approval, but keep champion mutation in the separate promotion step.
 
 ## Finish
 
 Rebuild the selected champion cleanly and rerun the focused regression, final serialization or transcript validation, and representative resource probe. If Checker and Local Evaluation was evidence-triggered or Plateau Escape completed its phase-local evaluator gate, rerun that independent evaluator and report its exact command and result. Otherwise, coherent accepted official evidence may remain the evaluation record; do not delay delivery merely to manufacture a local campaign with no unresolved problem hypothesis. Deliver the champion rather than the latest edit.
 
-Before accepting any scored result below 70% of a meaningful official maximum or explicit target, read and execute Plateau Escape. Use its fresh-context sub-agents with role-specific evidence packets, let every selected rank-1 critic/research track complete its authorized iteration loop and stop condition, and apply the evidence-bound promotion or rejection rule; do not finish with only advice, an unevaluated recommendation, a subjective main-agent veto, or another round of minor parameter tuning.
+Before accepting any scored result below 70% of a meaningful official maximum or explicit target, read and execute Plateau Escape. Run its two sealed reviews from role-specific evidence packets, let every selected rank-1 critic/research track complete its authorized iteration loop and stop condition, and apply the evidence-bound promotion or rejection rule; do not finish with only advice, an unevaluated recommendation, a subjective veto, or another round of minor parameter tuning.
 
-An official score of `0`, or below `30%` of a meaningful maximum/target, is an immediate plateau: do not finish; invoke Plateau Escape and MUST run both fresh-context roles (or both sealed passes). Discard prior main-agent diagnoses, rankings, and rejections except independently verified facts. Adopt their common rank-1 route; if they disagree, execute both. The main agent may not veto; run each to its stop/rejection gate and promote only legal measured champions.
+An official score of `0`, or below `30%` of a meaningful maximum/target, is an immediate plateau: do not finish; invoke Plateau Escape and MUST run both sealed roles. Exclude prior diagnoses, rankings, and rejections from the role inputs except independently verified facts. Adopt their common rank-1 route; if they disagree, execute both. Do not veto either without qualifying evidence; run each to its stop/rejection gate and promote only legal measured champions.
 
 Report only:
 
@@ -184,6 +184,6 @@ Report only:
 root cause and decisive evidence
 implemented correction or promoted challenger
 commands/tests actually run and their results
-sub-agent submission ids, per-iteration scores, and terminal score when applicable
+submission ids, per-iteration scores, and terminal score when applicable
 remaining assumptions or material risk
 ```
