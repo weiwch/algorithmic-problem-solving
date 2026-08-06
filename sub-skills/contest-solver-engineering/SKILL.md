@@ -50,7 +50,7 @@ Treat warnings involving return types, narrowing, signedness, uninitialized stat
 
 Derive value bounds for every multiplication, sum, distance, count, and score.
 
-- Use `int64_t`/`long long` when 32-bit can overflow; use `__int128` for intermediate products when supported by the target.
+* Use `int64_t`/`long long` when 32-bit can overflow; use `__int128` for intermediate products only when supported by the target compiler, typically with a 64-bit GNU/Clang target.
 - Check sentinel arithmetic. `INF + weight`, negating the minimum signed value, and evaluating a sentinel line can overflow before comparison.
 - Normalize negative modular residues and prove modular inverse existence.
 - Keep objective direction consistent when negating scores or costs.
