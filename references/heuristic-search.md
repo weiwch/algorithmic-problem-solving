@@ -1,8 +1,22 @@
 # Quantified Heuristic Search
 
-Use this reference when a legal scored attempt has exposed a concrete weakness in construction, representation, moves, evaluation, or optimizer behavior. The central question is not which metaheuristic sounds sophisticated. It is whether the representation, moves, evaluation, and useful-event count form an informative reachable process within the time limit.
+Use this reference for offline scored and output-only search: construction, representation, moves, evaluation, reachability, and optimizer behavior. The central question is not which metaheuristic sounds sophisticated. It is whether the representation, moves, evaluation, and useful-event count form an informative reachable process within the time limit.
 
-If the evidence already meets the admission criteria for [plateau escape](../sub-skills/plateau-escape/SKILL.md), stop scalar tuning and use that sub-skill before selecting another representation or method family. Use this reference for concrete search mechanics and for testing the structural hypotheses returned by the plateau review.
+[Escaping Search Plateaus](../sub-skills/plateau-escape/SKILL.md) maps broader structural alternatives and prior-art questions; this reference supplies the concrete search mechanics used to instantiate and test them.
+
+## Contents
+
+- [Search budget](#1-search-budget)
+- [Useful-event rates](#2-quantify-useful-events)
+- [Representation and invariants](#3-representation-and-invariants)
+- [Construction and fallback](#4-fallback-and-construction)
+- [Incremental evaluation](#5-incremental-evaluation)
+- [Neighborhoods and reachability](#6-neighborhoods-and-reachability)
+- [Objectives, proxies, and penalties](#7-true-objective-proxies-and-penalties)
+- [Optimizer selection](#8-optimizer-selection)
+- [Calibration](#9-calibration)
+- [Time policy](#10-time-policy-and-multiple-instances)
+- [Failure-directed iteration](#11-failure-directed-iteration)
 
 ## 1. Search budget
 

@@ -4,19 +4,17 @@ description: >-
   Diagnose and harden contest or bounded algorithmic solver implementations for
   compiler and toolchain mismatches, crashes, undefined behavior, overflow,
   memory-layout failures, TLE or MLE, buffering, serialization, randomness,
-  data-structure invariants, and unsafe deadline handling. Use as an internal
-  algorithmic-problem-solving recovery route after evidence implicates the
-  implementation or target environment rather than the mathematical model,
-  evaluator contract, or search-method design.
+  data-structure invariants, and unsafe deadline handling. Use for solver
+  implementation, portability, resource, I/O, and release-engineering questions.
 ---
 
 # Contest Solver Engineering
 
-Recover implementation and environment failures after the algorithmic route is justified. Correct algorithm design can still score zero when the target compiler, protocol, serialization, numeric range, memory layout, or deadline is wrong.
+Correct algorithm design can still fail when the target compiler, protocol, serialization, numeric range, memory layout, or deadline assumptions are wrong.
 
-## Ownership and handoffs
+## Topic boundaries
 
-This skill owns target-toolchain reproduction, numeric and memory safety, measured runtime, low-level I/O, serialization, randomness, implementation invariants, and release hardening. Route:
+This guide covers target-toolchain reproduction, numeric and memory safety, measured runtime, low-level I/O, serialization, randomness, implementation invariants, and release hardening. Adjacent topics are:
 
 - a contradicted state, recurrence, reduction, proof, or asymptotic route to [model and route algorithms](../model-and-route-algorithms/SKILL.md);
 - evaluator parsing, legality, or score uncertainty that blocks the current decision, or official/local disagreement to [checker and local evaluation](../checker-and-local-evaluation/SKILL.md);
@@ -128,7 +126,7 @@ For interactive output:
 - do not wait for an initial token the protocol never sends;
 - avoid naming helpers so they collide with standard-library functions.
 
-When a concrete buffering, flush, deadlock, premature-EOF, or process-wiring symptom needs local reproduction, test the real process through pipes against a simulator. Stable coherent official interactions do not require simulator construction solely for this section; route evaluator implementation through Checker and Local Evaluation only when that diagnostic evidence exists.
+For buffering, flush, deadlock, premature-EOF, or process-wiring problems, test the real process through pipes against a simulator. Function-level simulation does not exercise operating-system buffering or pipe wiring.
 
 This section owns low-level process, buffering, serialization, and deadline failures. Interactive Problem Solving owns the protocol contract, hypothesis model, and query strategy.
 
@@ -186,9 +184,9 @@ Release build should:
 
 Run both modes on the same regression corpus, then rerun release in a clean process or container. Reused containers may retain writable temporary state, so a clean run is part of validation.
 
-## 9. Final audit
+## 9. Release checklist
 
-Before delivery, answer concretely:
+Check the applicable items before delivery:
 
 - Which compiler command succeeded?
 - Which official or local judge command succeeded?
@@ -199,4 +197,4 @@ Before delivery, answer concretely:
 - Is the saved final artifact the champion?
 - Are unavailable headers, CPU features, accidental debug output, and private data access absent?
 
-Complete the applicable release gate in Validation and Experiments. Return the root implementation/environment cause, the exact build and run commands, focused regression results, observed resource margins, and remaining target-environment assumptions.
+[Validation and Experiments](../validation-and-experiments/SKILL.md) provides brute, differential, metamorphic, paired, and resource-test designs for these checks.

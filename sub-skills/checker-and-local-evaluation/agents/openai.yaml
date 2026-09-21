@@ -1,7 +1,7 @@
 interface:
   display_name: "Checker and Local Evaluation"
-  short_description: "Build independent contest evaluators and local judging oracles"
-  default_prompt: "Use $checker-and-local-evaluation to design, implement, and validate an independent checker, scorer, interactor, or local evaluation workflow."
+  short_description: "Build reliable local evaluators and judging workflows"
+  default_prompt: "Use $checker-and-local-evaluation to design, implement, and validate the checker, scorer, interactor, or local judging workflow this task needs."
 
 policy:
   allow_implicit_invocation: false

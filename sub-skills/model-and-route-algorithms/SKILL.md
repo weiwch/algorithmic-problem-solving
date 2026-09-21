@@ -1,29 +1,26 @@
 ---
 name: model-and-route-algorithms
 description: >-
-  Diagnose and repair a static algorithmic problem model, state, reduction,
-  recurrence, invariant, or proof, then decide whether an exact, constructive,
-  exact-hybrid, heuristic, or scored-hybrid route fits the real bounds. Use as
-  an internal algorithmic-problem-solving recovery route when brute force or a
-  proof premise contradicts the attempted solution, or when the model is
-  trusted but the justified solution class remains unclear. Do not use for
-  hidden-state query design or reward-bearing online decisions.
+  Guide static algorithmic modeling and solution-class selection through
+  operational contracts, sufficient state, reductions, recurrences,
+  invariants, proof obligations, and resource envelopes. Use when a problem
+  formulation is unclear, a proof premise needs checking, or exact,
+  constructive, hybrid, and heuristic routes must be compared against the real
+  bounds.
 ---
 
 # Model and Route Algorithms
 
-Establish a trusted static model and proof target before selecting a solution class. Enter at the earliest unresolved stage and do not reopen an upstream stage without new contradictory evidence.
+Establish the static model and proof target before selecting a solution class.
 
 ```
 operational contract -> sufficient model/state -> proof obligation
 -> resource envelope -> admissible solution class -> concrete method family
 ```
 
-## Entry modes and ownership
+## Topic boundaries
 
-Use the **model-repair entry** when the failed attempt may be solving the wrong problem or relying on an incomplete state, reduction, invariant, recurrence, or proof. Use the **route-selection entry** at [the feasibility envelope](#5-establish-the-operation-and-memory-envelope) only when the operational model and correctness obligations are already trusted.
-
-This skill owns static combinatorial modeling, correctness obligations, and exact/constructive/hybrid/heuristic route choice. Route other failure layers as follows:
+This guide covers static combinatorial modeling, correctness obligations, and exact/constructive/hybrid/heuristic route choice. Adjacent topics are:
 
 - evaluator parsing, legality, or objective uncertainty that blocks the current decision, or official/local disagreement: [checker and local evaluation](../checker-and-local-evaluation/SKILL.md);
 - hidden-state acquisition and query semantics: [interactive problem solving](../interactive-problem-solving/SKILL.md);
@@ -42,7 +39,7 @@ Raw objective: minimize/maximize f(I, x).
 Observed score: S(I, x) = transform(f, baseline, bound, aggregation).
 ```
 
-Derive this model from the statement and every directly relevant checker, scorer, configuration, and sample. When prose and executable behavior differ, record both interpretations, their legal intersection, and any dependency on the operational evaluator. If the evaluator itself is doubtful, stop and use Checker and Local Evaluation before treating either interpretation as trusted.
+Derive this model from the statement and every directly relevant checker, scorer, configuration, and sample. When prose and executable behavior differ, record both interpretations, their legal intersection, and any dependency on the operational evaluator. [Checker and Local Evaluation](../checker-and-local-evaluation/SKILL.md) explains how to reconstruct doubtful evaluator behavior.
 
 Check common modeling traps:
 
@@ -110,8 +107,6 @@ Useful patterns include:
 
 A promise that the input is feasible does not prove that the chosen construction reaches a solution. Prove progress and termination under every legal input.
 
-Do not pass the model checkpoint until the operational contract, state/reduction, and applicable proof obligation are either established or isolated as the concrete unresolved cause.
-
 ## 5. Establish the operation and memory envelope
 
 Extract from the actual bounds:
@@ -148,7 +143,7 @@ Use contract, proof, and resource evidence to distinguish:
 
 For exact-output tasks, an incomplete search is not converted into an exact algorithm by performing well on samples. Every pruning rule, timeout, decomposition, and subsolver must preserve completeness.
 
-For each credible exact or exact-hybrid candidate, record:
+Compare each credible exact or exact-hybrid candidate on:
 
 ```
 state/object count and transition count
@@ -161,13 +156,13 @@ resource margin under the target toolchain
 
 Reject or revise a route when completeness depends on unproved compression, unsafe dominance, unguaranteed average-case behavior, unavailable solver/library support, or a resource estimate without margin. When several exact candidates remain plausible, compare representative dominant kernels, but keep worst-case feasibility authoritative.
 
-## 7. Select the downstream method family
+## 7. Select the concrete method family
 
-After the admissible class is fixed, read [technique selection](../../references/technique-selection.md) for DP, graph, algebra, geometry, string, decomposition, bounded-exponential, general-solver, or data-structure families. Do not use that catalog to bypass an unresolved model or feasibility contradiction.
+[Algorithm Technique Selection](../../references/technique-selection.md) catalogs DP, graph, algebra, geometry, string, decomposition, bounded-exponential, general-solver, and data-structure families. Compare their preconditions with the model and feasibility envelope above.
 
 When complete exact work does not fit, do not force an incomplete method if the contract requires an exact answer. Revisit missing structure or record that no justified complete route is currently known. When non-optimal output is explicitly allowed, retain hard validity and a guaranteed-valid fallback when early termination could erase all value.
 
-For heuristic or scored-hybrid mechanics, read the shared [heuristic search](../../references/heuristic-search.md). If a verified legal champion already meets the plateau admission gate, use [plateau escape](../plateau-escape/SKILL.md) before another tuning sequence.
+For heuristic or scored-hybrid mechanics, use [Quantified Heuristic Search](../../references/heuristic-search.md). [Escaping Search Plateaus](../plateau-escape/SKILL.md) maps structural alternatives when local calibration no longer explains the remaining gap.
 
 ## 8. Design exact and scored hybrids
 
@@ -184,21 +179,6 @@ candidate generation + exact selection/assignment
 
 For each exact subproblem, quantify its size, solve cost, call frequency, cache reuse, timeout behavior, and boundary coupling. Bound variable work so one hard subsolve cannot consume the release budget. Verify that the local objective aligns with the global true score and that splicing preserves every cross-boundary constraint.
 
-## 9. Produce one model-and-route record
+## Revisiting the route
 
-Keep a single handoff rather than separate modeling and feasibility reports:
-
-```
-entry mode and decisive failure evidence
-operational contract and disputed interpretation
-trusted model, state, reduction, and proof obligation
-smallest counterexample or remaining unproved premise
-Candidate A: O(...), ... MB; accepted/rejected because ...
-Candidate B: O(...), ... MB; accepted/rejected because ...
-chosen route: exact / constructive / exact hybrid / heuristic / scored hybrid
-critical structural, evaluator, and resource assumptions
-oracle, bound, compiler pilot, or evaluator evidence actually used
-next routed document/sub-skill and its exact question
-```
-
-Proceed only from the established checkpoint. Reopen the model when new correctness evidence contradicts it; reopen route choice when a bound, environment fact, or method premise changes materially.
+A counterexample can invalidate the state or proof; a tighter bound can change the feasible method class; a compiler or memory fact can change the resource envelope. Recompute the affected part of the model rather than treating the first route choice as permanent.

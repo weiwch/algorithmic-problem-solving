@@ -1,7 +1,7 @@
 interface:
-  display_name: "Algorithmic Problem-Solving Recovery"
-  short_description: "Recover algorithmic solves after a complete first attempt fails"
-  default_prompt: "Use $algorithmic-problem-solving to diagnose why the focused complete solve failed, choose the smallest relevant recovery route, run evidence-isolated research when escalation applies, and deliver the best legal artifact under exact test or score evidence."
+  display_name: "Algorithmic Problem-Solving Guide"
+  short_description: "Route algorithm questions to focused knowledge guides"
+  default_prompt: "Use $algorithmic-problem-solving to identify and consult the most relevant knowledge guide for this problem."
 
 policy:
   allow_implicit_invocation: true

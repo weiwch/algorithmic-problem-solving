@@ -12,12 +12,10 @@ checker or scorer, an input validator, a deterministic test generator, or a
 testlib interactor. It is intentionally C++-only and header-only. Do not create
 a Python harness for the ordinary local judging workflow.
 
-This skill owns concrete Testlib APIs, streams, verdicts, command lines, and
-templates. When evaluator-facing evidence has triggered independent contract or
-oracle work, use [checker and local evaluation](../checker-and-local-evaluation/SKILL.md)
-to choose checker/scorer/interactor architecture, reconstruct legality and
-objectives, and validate the evaluator itself. Do not enter that route merely
-because a previously specified generator or validator is being implemented.
+This skill covers concrete Testlib APIs, streams, verdicts, command lines, and
+templates. [Checker and Local Evaluation](../checker-and-local-evaluation/SKILL.md)
+covers checker/scorer/interactor architecture, legality and objective
+reconstruction, and evaluator validation.
 
 ## Start Here
 
@@ -123,11 +121,10 @@ reported points with the status.
 
 - This skill explains the public `testlib.h` workflow, not development of the
   testlib repository itself.
-- For evaluator roles, this skill implements a previously derived contract. Use
-  [checker and local evaluation](../checker-and-local-evaluation/SKILL.md) only
-  when contract, reconstruction, score-transform, or fidelity uncertainty is
-  evidence-triggered and blocks the current decision, or when official and local
-  behavior disagree.
+- For evaluator roles, this skill implements a judging contract. Use
+  [checker and local evaluation](../checker-and-local-evaluation/SKILL.md) for
+  contract reconstruction, score transforms, fidelity, and official/local
+  discrepancies.
 - This skill owns concrete testlib implementation. Use
   [interactive problem solving](../interactive-problem-solving/SKILL.md) for
   protocol modeling, hidden hypotheses, query design, and adversarial strategy.

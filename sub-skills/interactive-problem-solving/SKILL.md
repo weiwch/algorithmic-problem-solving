@@ -6,15 +6,14 @@ description: >-
   sufficiently determined. Use for interactive problems, output-only tasks
   with a checker, and custom-judge workflows when the central difficulty is the
   protocol contract, query design, hypothesis elimination, query budget,
-  transcript behavior, noise, or adversarial feedback. Do not use for offline
-  output-only or scorer-only optimization whose feedback occurs only between
-  development runs; use heuristic search. Use reactive-online-decision-problem-solving when
-  reward-bearing actions receive live feedback that changes later decisions.
+  transcript behavior, noise, or adversarial feedback. Offline score tuning is
+  covered by heuristic search; live reward-bearing decisions are covered by
+  reactive-online-decision-problem-solving.
 ---
 
 # Interactive Problem Solving
 
-Reduce uncertainty until the answer is uniquely or sufficiently determined:
+The information-acquisition cycle is:
 
 ```
 understand the interaction contract
@@ -49,7 +48,7 @@ correctness and score dependence on answers, queries, actions, and time
 
 Replay sequential updates, rounding, accumulators, and state transitions literally. When prose and executable behavior differ, document both, derive their legal intersection, and use the intersection when it preserves correctness and budget. If a stronger solution depends on executable-only behavior, name and directly test that dependency.
 
-Only when a concrete unresolved deterministic validity or score question requires independent reconstruction, use [checker and local evaluation](../checker-and-local-evaluation/SKILL.md) rather than treating checker calls as interactive queries. Coherent accepted official evidence does not trigger that route by itself.
+[Checker and Local Evaluation](../checker-and-local-evaluation/SKILL.md) explains independent reconstruction of checker, scorer, and process behavior when those semantics are part of the question.
 
 ## 2. Model hypotheses and identifiability
 
@@ -101,13 +100,11 @@ answer(solution)
 
 `ask` owns serialization, budget accounting, flushing, reply validation, and immediate termination on judge error or EOF. Keep diagnostics off stdout. Put buffering, deadline, numeric, and target-toolchain fixes in [contest solver engineering](../contest-solver-engineering/SKILL.md); do not mix them into the query-selection proof.
 
-## 5. Validate with a simulator when diagnostic
+## 5. Validate with a simulator or transcript
 
-Route to [checker and local evaluation](../checker-and-local-evaluation/SKILL.md) when a concrete protocol symptom, disputed state transition, unexplained official response, or strategy hypothesis needs a process-level simulator/interactor, real-pipe runner, transcript contract, or independent state/reward replay. If accepted official interactions have stable protocol behavior and coherent feedback, do not build a simulator solely because this section was reached; defer it until it can expose or discriminate a problem. Once routed, use [validation and experiments](../validation-and-experiments/SKILL.md#7-interactive-and-reactive-evaluator-validation) to incorporate those artifacts into the broader validation ladder and solver comparison loop.
+A state-machine simulator checks response semantics and strategy invariants. A real-pipe runner additionally checks serialization, buffering, flushing, EOF, process termination, and timeouts. Use [Checker and Local Evaluation](../checker-and-local-evaluation/SKILL.md) for evaluator architecture, [Testlib C++ Judging](../testlib-cpp-judging/SKILL.md) for concrete `testlib.h` APIs and commands, and [Validation and Experiments](../validation-and-experiments/SKILL.md#7-interactive-and-reactive-evaluator-validation) for experiment design.
 
-When evaluator work is routed and the repository uses `testlib.h`, first keep the evaluator contract and independence rules in Checker and Local Evaluation, then follow [testlib C++ judging](../testlib-cpp-judging/SKILL.md) for the concrete interactor/checker API and build commands.
-
-When such a simulator or transcript campaign is justified, validate the information strategy itself with:
+High-value simulator and transcript cases include:
 
 - exhaustive tiny hidden states;
 - exact budget exhaustion and final-answer accounting;
@@ -136,5 +133,3 @@ The solver must never observe simulator-only truth.
 | Works in functions but hangs remotely | Real bidirectional pipes, buffering, EOF, timeout |
 | Noise causes unstable elimination | Likelihood model, dependence, calibration, robust separation |
 | Nonzero feedback but non-perfect result | Whether feedback measures correctness, query count, or quality |
-
-Return the recovered contract, query invariant/criterion, identifiability argument, implementation, simulator/transcript commands actually run, maximum observed query count, and remaining assumptions.

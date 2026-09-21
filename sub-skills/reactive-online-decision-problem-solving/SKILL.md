@@ -5,10 +5,10 @@ description: >-
   future reward under uncertainty, including reactive or online control,
   repeated-round learning, exploration, and risk-aware action selection. Use
   when actions occur in a live sequential process, their feedback changes later
-  choices in the same run or environment, and termination is a horizon, task
-  completion, or decision budget. Do not use for offline output-only AHC or
-  scorer-only optimization across development runs; use heuristic search. Use
-  interactive-problem-solving for pure query design or protocol mechanics.
+  choices in the same run or persistent environment, and termination is a
+  horizon, task completion, or decision budget. Offline output optimization is
+  covered by heuristic search; pure hidden-state query design is covered by
+  interactive-problem-solving.
 ---
 
 # Reactive Online Decision Problem Solving
@@ -30,7 +30,7 @@ If a reactive task contains a separable calibration or hidden-state identificati
 
 ## 1. Define the decision contract
 
-Record the operational decision process:
+Model the operational decision process:
 
 ```
 observable state/history and latent uncertainty
@@ -43,7 +43,7 @@ reset/persistence across rounds, cases, and evaluations
 terminal conditions and mandatory completion requirements
 ```
 
-Separate hard legality from quality. Replay state transitions and reward calculations literally. If local and official scoring disagree, route to [checker and local evaluation](../checker-and-local-evaluation/SKILL.md) before changing the policy.
+Separate hard legality from quality. Replay state transitions and reward calculations literally. [Checker and Local Evaluation](../checker-and-local-evaluation/SKILL.md) covers independent transition, reward, and score reconstruction.
 
 ## 2. Separate estimator, planner, and explorer
 
@@ -88,22 +88,11 @@ Use exact combinatorial optimization inside each decision when it fits: shortest
 
 For scored construction, neighborhoods, incremental deltas, SA, beam search, LNS, portfolios, time allocation, and other concrete optimization mechanisms, read [heuristic search](../../references/heuristic-search.md). That reference owns search-method details; this skill owns the uncertainty-aware policy wrapped around them.
 
-Maintain:
-
-```
-legal fallback policy or output
-current model/policy state
-best independently validated legal champion
-experimental challenger
-```
-
-Never replace the champion with a seed-sensitive or invalid challenger. If controlled structural alternatives have stopped improving a verified champion, route to [plateau escape](../plateau-escape/SKILL.md).
+Keep a legal fallback action or output for estimator failure, planner timeout, or an unexpectedly short remaining horizon. [Escaping Search Plateaus](../plateau-escape/SKILL.md) catalogs structural alternatives when the current policy family saturates.
 
 ## 5. Evaluate repeated feedback correctly
 
-When a concrete legality, transition, reward, protocol, or official-feedback uncertainty needs local diagnosis, route to [checker and local evaluation](../checker-and-local-evaluation/SKILL.md) to implement an independent episode replayer, scorer, interactor, or process harness. Coherent accepted online episodes do not require this route solely because the policy is reactive; local replay may be deferred while the open question is policy quality. Once routed, that sub-skill owns evaluator isolation, executable contracts, and adversarial evaluator tests; this skill owns the estimator, planner, explorer, and policy-level diagnosis. When the evaluator uses `testlib.h`, follow the concrete Testlib route linked there.
-
-Use [validation and experiments](../validation-and-experiments/SKILL.md) for champion/challenger discipline, paired cases/seeds, holdouts, and release checks.
+An independent episode replayer, scorer, interactor, or process harness can expose transition, reward, protocol, or official-feedback discrepancies. [Checker and Local Evaluation](../checker-and-local-evaluation/SKILL.md) covers those evaluator components; [Validation and Experiments](../validation-and-experiments/SKILL.md) covers paired cases and seeds, holdouts, and comparison design.
 
 Separate randomness sources:
 
@@ -144,5 +133,3 @@ Do not add flush/query machinery to an offline scorer-only workflow. If a live j
 | Seeds diverge sharply | Fragile early updates, heavy tails, missing fallback |
 | Runtime spikes | Replanning complexity, allocation, unbounded repair/subsolve |
 | Local score rises, official score does not | Score transform, instance shift, overfit, evaluator mismatch |
-
-Return the decision contract, estimator/planner/explorer design, legality and fallback invariants, implementation, evaluations actually run, champion comparison, and residual uncertainty or risk.

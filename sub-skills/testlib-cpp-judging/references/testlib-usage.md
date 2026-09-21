@@ -1,12 +1,22 @@
 # testlib.h Usage Guide
 
+## Contents
+
+- [Purpose](#purpose)
+- [Header setup](#header-setup)
+- [Checker](#checker)
+- [Validator](#validator)
+- [Generator](#generator)
+- [Interactor](#interactor)
+- [Minimal file layout](#minimal-file-layout)
+
 ## Purpose
 
 Use this reference to author small, self-contained C++ programs around the
 bundled `testlib.h`. The primary workflow is an offline checker with an
 optional validator. Generator and interactor coverage is included because they
 use the same header, but they do not change the minimal checker command line in
-the root skill.
+the main Testlib guide.
 
 The API facts and examples here were distilled from testlib 0.9.45, its bundled
 header, and the repository's C++ examples.
@@ -215,9 +225,8 @@ Useful primitives include:
   custom no-newline formatting is required.
 
 After generation, validate every intended-valid produced file with the problem
-validator. If a routed randomized, batch, or large-data campaign has no
-validator yet, implement the independent validator before relying on the
-generated cases.
+validator. If a randomized, batch, or large-data campaign has no validator yet,
+implement the independent validator before relying on the generated cases.
 
 ### Parameterized campaigns and large cases
 
@@ -282,8 +291,8 @@ int main(int argc, char* argv[]) {
 The interactor reads test data from `inf`, reads the participant process from
 `ouf` (the interactor's stdin), writes protocol messages to stdout, and writes
 a transcript or checker input to `tout`. Every query must be flushed. A judge
-or dedicated interactive runner must connect the two processes; the root
-skill's `solution < case.in > case.out` command is not an interactive runner.
+or dedicated interactive runner must connect the two processes; ordinary
+`solution < case.in > case.out` redirection is not an interactive runner.
 
 ## Minimal File Layout
 

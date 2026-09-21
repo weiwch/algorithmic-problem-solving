@@ -1,7 +1,7 @@
 interface:
   display_name: "Testlib C++ Judging"
-  short_description: "Build C++ checkers, validators, generators, and interactors"
-  default_prompt: "Use $testlib-cpp-judging to implement the required testlib.h checker, validator, generator, interactor, or minimal local judging flow in C++."
+  short_description: "Build C++ judging tools with Testlib"
+  default_prompt: "Use $testlib-cpp-judging to implement the needed Testlib checker, validator, generator, interactor, or local judging command."
 
 policy:
   allow_implicit_invocation: false

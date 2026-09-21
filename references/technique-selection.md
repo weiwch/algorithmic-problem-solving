@@ -1,10 +1,18 @@
 # Algorithm Technique Selection
 
-Use this catalog after the problem model is trusted and [model and route algorithms](../sub-skills/model-and-route-algorithms/SKILL.md#5-establish-the-operation-and-memory-envelope) has narrowed the admissible solution classes. It supplies algorithm-family questions and rejection conditions, not copy-paste code. Generate only the implementation the problem needs, then compile and test it; static template libraries often contain hidden convention, overflow, memory, or boundary assumptions.
+Use this catalog after [Model and Route Algorithms](../sub-skills/model-and-route-algorithms/SKILL.md#5-establish-the-operation-and-memory-envelope) has clarified the model and feasible solution classes. It supplies algorithm-family questions and rejection conditions, not copy-paste code. Generate only the implementation the problem needs, then compile and test it; static template libraries often contain hidden convention, overflow, memory, or boundary assumptions.
 
-## Plateau gate
+## Contents
 
-If this technique-selection failure occurs after the admission criteria for [plateau escape](../sub-skills/plateau-escape/SKILL.md) are met, do not choose another method family from this catalog yet. Complete that structural review, then use this catalog to compare the returned routes. Before a plateau, use the failed complexity, proof, or brute-test evidence to narrow candidates.
+- [Family-level routing](#family-level-routing)
+- [Fundamental transforms](#fundamental-transforms)
+- [Graphs and relations](#graphs-and-relations)
+- [Dynamic programming and exact search](#dynamic-programming-and-exact-search)
+- [Strings](#strings)
+- [Number theory and algebra](#number-theory-and-algebra)
+- [Geometry](#geometry)
+- [Range and advanced structures](#range-and-advanced-structures)
+- [Selecting among several fits](#selecting-among-several-fits)
 
 ## Family-level routing
 

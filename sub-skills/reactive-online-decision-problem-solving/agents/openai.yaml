@@ -1,7 +1,7 @@
 interface:
   display_name: "Reactive Online Decision Problem Solving"
-  short_description: "Optimize uncertain online and sequential-feedback decisions"
-  default_prompt: "Use $reactive-online-decision-problem-solving to model this uncertain decision process, build a legal risk-aware policy, balance exploration with reward, and evaluate it against the current champion."
+  short_description: "Design policies for live feedback and uncertain rewards"
+  default_prompt: "Use $reactive-online-decision-problem-solving to model this live decision process and reason about estimation, planning, exploration, reward, and risk."
 
 policy:
   allow_implicit_invocation: false
